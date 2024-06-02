@@ -1,0 +1,148 @@
+/* html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+/* article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+} */
+
+
+
+
+
+
+.navbar {
+	background: linear-gradient(90deg, #011007, #06191e, #02110E);
+}
+.navbar .navbar-brand {
+	color: #ffffff;
+}
+body {
+	margin: 0;
+	height: 100vh;
+	background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Horizontal gradient */
+	display: flex;
+	flex-direction: column;
+}
+/* 
+@media screen {
+	
+} */
+#paddle-1 {
+	background-color: #0ce39d;
+	padding: 5px 6px;
+	margin-left: 1%;
+	width: 5px;
+	height: 80px;
+	display: flex;
+	border-radius: 5%;
+	animation-name: drive;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+  }
+#paddle-2 {
+	background-color: #0ce39d;
+	padding: 5px 6px;
+	margin-right: 1%;
+	width: 5px;
+	height: 80px;
+	display: flex;
+	border-radius: 5%;
+	animation-name: drive-2;
+	animation-duration: 3s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+#paddle-1:hover {
+	background-color: magenta;
+	transition: 1s;
+  }
+#paddle-2:hover {
+	background-color: magenta;
+	transition: 1s;
+  }
+
+
+.container-fluid
+{
+display: flex;
+justify-content: space-between;
+}
+#hook {
+	position: relative;
+	font-size: 6em;
+	font-family: zen tokyo zoo;
+	letter-spacing: 15px;
+	text-transform: uppercase;
+	width: 100%;
+	text-align: center;
+	line-height: 0.70em;
+	outline: none;
+	/* animation: animate 5s linear infinite; */
+	padding-top: 10%;
+
+	border-color: rgb(255, 255, 255);
+	color: rgb(255, 0, 255);
+	cursor: pointer;
+}
+.navbar-brand, .nav-link {
+	color: #ffffff !important;
+}
+
+@keyframes drive {
+	from{transform: translateY(0)}
+	to {transform: translateY(800px)}
+}
+@keyframes drive-2 {
+	from{transform: translateY(500px)}
+	to {transform: translateY(0px)}
+}
+
+/* @keyframes animate {
+	0%
+	{
+		color: rgb(157, 5, 157);
+		box-shadow: none;
+	}
+	100%
+	{
+		color: rgb(255, 0, 255);
+	}
+} */
