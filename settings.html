@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Sign In</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Zen+Tokyo+Zoo&display=swap');
+	</style>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<link rel="stylesheet" href="./assets/css/settings.css">
+</head>
+
+<body>
+	<section>
+		<nav class="navbar navbar-dark bg-dark">  <!-- old one <nav class="navbar navbar-expand-lg navbar-dark bg-dark">  -->
+			<div class="pongFlex">
+                <div class="menuBtn">
+                    <div class="d1"></div>
+                    <div class="d2"></div>
+                    <div class="d3"></div>
+                </div>
+                <div>
+                    <a class="navbar-brand mb-3 h1" href="index.html">
+                        Pongers
+                    </a>
+                </div>
+				<!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#expandme"
+					aria-controls="expandme" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button> -->
+				<div class="collapse navbar-collapse justify-content-center" id="expandme"></div>
+			</div>
+            <div class="iconUsername">
+                <!-- <div class="username">
+                </div> -->
+                <button class="username">
+                    <img class="userIcon" src="assets/balls-golf-svgrepo-com.svg">
+                    Username
+                    <!-- <i class="fa fa-caret-down"></i> -->
+				</button>
+				<div class="dropdown-content">
+				<a href="#">user from db 1</a>
+				<a href="#">user from db 2</a>
+				<a href="#">user from db 3</a>
+				</div>
+            </div>
+		</nav>
+	</section>
+	<main>
+		
+		<div class="panel">
+			<h1>settings</h1>
+			<div class="LpanRpan">
+
+				<!-- left panel -->
+				<div class="Lpan">
+					change profile picture
+					<div class="imgLogo">
+						<img class="icon" src="assets/images/icon.svg" alt="no img" >
+					</div>
+					<div class="uploadImg">
+						<form>
+							<button class="uplBTN">
+								<input type="file" id="actual-btn" hidden/>
+								<div>
+									<img class="uplIcon" src="assets/images/upl.svg" alt="no img">
+									<label for="actual-btn">UPLOAD</label>
+								</div>
+							</button>
+							<!-- <input type="file" > -->
+						</form>
+					</div>
+					<div class="LBTN">
+						<button class="cancel">
+							cancel
+						</button>
+						<button class="save">
+							save
+						</button>
+					</div>
+				</div>
+
+				<!-- right panel -->
+				<div class="Rpan">
+					<!-- first colum -->
+					<div class="r1">
+						personal information
+						<div class="inp"> <!-- 4 inputs -->
+							<div class="firstInp">
+								<input class="Linp" type="text" placeholder="change Username">
+								<input class="Rinp" type="text" placeholder="change EMAIL">
+							</div>
+							<div class="secondInp">
+								<input class="secLinp">
+								<input class="secRinp">
+							</div>
+						</div>
+						<div class="r1BTN">
+							<button class="cancel">
+								cancel
+							</button>
+							<button class="save">
+								save
+							</button>
+						</div>
+					</div>
+					<!-- second colum -->
+					<div class="r2">
+						change password
+						<div class="inp2"> <!-- 3 inputs -->
+							<div class="firInp2">
+								<input class="Linp2" type="text" placeholder="current password">
+								<input class="Rinp2" type="text" placeholder="new password">
+							</div>
+							<div class="secInp2">
+								<input class="secLinp" type="text" placeholder="confirm new password">
+							</div>
+						</div>
+						<div class="r2BTN">
+							<button class="cancel">
+								cancel
+							</button>
+							<button class="save">
+								save
+							</button>
+						</div>
+					</div>
+					<div class="r3">
+						two-factor authentication
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</main>
+	<footer>
+		<nav class="foot">
+			<a href="index.html" class="mr-3">Home</a>
+			<a href="about.html" class="mr-3">About</a>
+			<a href="how-to-play.html" class="mr-3" >How to play</a>
+			<a href="contact.html" class="mr-3">Contact</a>
+		</nav>
+	</footer>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+		integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
