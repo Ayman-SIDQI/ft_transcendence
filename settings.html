@@ -16,35 +16,44 @@
 <body>
 	<section>
 		<nav class="navbar navbar-dark bg-dark">  <!-- old one <nav class="navbar navbar-expand-lg navbar-dark bg-dark">  -->
-			<div class="pongFlex">
-                <div class="menuBtn">
-                    <div class="d1"></div>
-                    <div class="d2"></div>
-                    <div class="d3"></div>
-                </div>
-                <div>
-                    <a class="navbar-brand mb-3 h1" href="index.html">
-                        Pongers
-                    </a>
-                </div>
-				<!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#expandme"
-					aria-controls="expandme" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button> -->
-				<div class="collapse navbar-collapse justify-content-center" id="expandme"></div>
+			<div class="pong">
+				<div class="pongFlex">
+					<button class="mBTN">
+						<div class="menuBtn">
+							<div class="d1"></div>
+							<div class="d2"></div>
+							<div class="d3"></div>
+						</div>
+					</button>
+					<div class="dropdown-content2">
+						<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> <!-- filterFunction to filter search waw -->
+						<div class="cntPadd">
+							<a href="#">play</a>
+							<a href="#">Leaderboard</a>
+							<a href="#">tournament</a>
+							<a href="#">chat</a>
+							<a href="#">History</a>
+							<a href="#">Settings</a>
+						</div>
+					</div>
+				</div>
+					<div>
+						<a class="navbar-brand mb-3 h1" href="index.html">
+							Pongers
+						</a>
+					</div>
+					<div class="collapse navbar-collapse justify-content-center" id="expandme"></div>
 			</div>
             <div class="iconUsername">
-                <!-- <div class="username">
-                </div> -->
                 <button class="username">
                     <img class="userIcon" src="assets/balls-golf-svgrepo-com.svg">
                     Username
                     <!-- <i class="fa fa-caret-down"></i> -->
 				</button>
 				<div class="dropdown-content">
-				<a href="#">user from db 1</a>
-				<a href="#">user from db 2</a>
-				<a href="#">user from db 3</a>
+					<a href="#">user from db 1</a>
+					<a href="#">user from db 2</a>
+					<a href="#">user from db 3</a>
 				</div>
             </div>
 		</nav>
@@ -67,7 +76,7 @@
 								<input type="file" id="actual-btn" hidden/>
 								<div>
 									<img class="uplIcon" src="assets/images/upl.svg" alt="no img">
-									<label for="actual-btn">UPLOAD</label>
+									<label class="upltext" for="actual-btn">UPLOAD</label>
 								</div>
 							</button>
 							<!-- <input type="file" > -->
