@@ -132,13 +132,13 @@ p {
 	color: grey;
 }
 
-/* footer .navbar {
-    display: flex;
-    justify-content: flex-start; 
-    padding: 20px 3em;
-    background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Matches your navbar gradient */
-
-
-
+footer .navbar {
+	display: flex;
+	justify-content: flex-start; 
+	padding: 20px 3em;
+	background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Matches your navbar gradient*/
+	font-family: montserrat;
+	font-size: 12px;
+}
 
 
