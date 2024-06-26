@@ -1,4 +1,14 @@
 
+.container{
+	min-width: 650px;
+}
+.r1, .r2, .r3 {
+	color: white;
+	margin: 10px;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+}
 .menuBtn {
 	display: inline-block;
 	flex-direction: column;
@@ -128,8 +138,11 @@ z-index: 1;
 
 
 
-.h1 {
-	font-size: 150%;
+h1 {
+	color: white;
+	font-size: 9dvb;
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	font: bold;
 }
 .d1, .d2, .d3 {
     width: 25px;
@@ -153,10 +166,11 @@ body {
 
 
 main {
+	background-color: #00dbff;
 	color: #ffffff;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	/* justify-content: center; */
 	align-items: center;
 	height: 100%;
 }
@@ -192,33 +206,52 @@ main {
 
 
 .panel {
-	/* background-color: #151515; */
+	/* background-color: #612fea; */
 	/* box-shadow: #737373  0px 0px 30px; */
 	border-radius: 10px;
 	padding: 15px 25px;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	height: 600px;
+	height: 90%;
 	width: 90%;
-	margin: 40px;
+	/* margin: 40px; */
 	text-align: center;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
   }
-
+.settingDiv {
+	display: block;
+	color: white;
+	display: flex;
+	justify-content: center;
+	font-size: 80px;
+}
+/* .LpanRpan {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: ;
+	height: 80%;
+} */
 .Lpan {
-	background-color: rgb(37, 34, 34);
-	width: 700px;
-	height:500px;
-	margin-right: 4px;
+	color: white;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	/* height: 100%; */
+	/* max-width: 600px; */
+	/* font-size: 2dvb; */
+	/* background-color: rgb(190, 32, 32); */
+	/* width: 50%;
+	height:100%; */
+	/* margin-right: 4px;
+	padding: 10px;
 	border-radius: 15px;
+	min-width: 400px;
+	max-width: 900px; */
 }
 .Rpan {
-	width: 700px;
-	height: 500px;
-	margin-left: 4px;
-	display: flex;
-	flex-direction: column;
+	/* background-color: red; */
 }
 
 .r1 {
@@ -228,26 +261,32 @@ main {
 	margin-right: 5px;
 	margin-bottom: 5px;
 	padding: 10px;
-	height: 150px;
+	height: 33%;
 	border-radius: 15px;
 }
 .firstInp, .secondInp, .firInp2 {
 	display: flex;
 	justify-content: center;
+	max-width: 600px;
 }
 .Rinp, .Linp, .Rinp2, .Linp2, .secLinp, .secRinp {
 	margin: 3px;
 	width: 50%;
 }
-
+.secLinp2 {
+	margin: 6px;
+	width: 90%;
+}
 .r1BTN, .r2BTN {
 	display: flex;
 	justify-content: end;
+	margin-top: 9px;
 }
 .cancel {
 	color: white;
 	border-radius: 20px;
 	margin-right: 10px;
+	/* margin-top: 60px; */
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-bottom: 5px;
@@ -258,6 +297,7 @@ main {
 	color: white;
 	border-radius: 20px;
 	margin-right: 10px;
+	/* margin-top: 60px; */
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-bottom: 5px;
@@ -273,7 +313,7 @@ main {
 	background-color: rgb(37, 34, 34);
 	margin: 5px;
 	padding: 10px;
-	height: 150px;
+	height: 33%z;
 	border-radius: 15px;
 }
 .r3 {
@@ -283,25 +323,24 @@ main {
 	margin-right: 5px;
 	margin-top: 5px;
 	padding: 10px;
-	height: 180px;
+	height: 33%;
 }
 .inp, .inp2 {
-	display: block;
-	margin: 5px;
-}
-.LpanRpan {
 	display: flex;
-	flex-direction: row;
-	justify-content: space-around;
-
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	margin-top: 1%;
+	margin-bottom: 3%;
 }
+
 
 /* left panel */
 .imgLogo {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 20px;
+	/* margin-top: 20px; */
 	width: 250px;
 	height: 250px;
 	border-radius: 50%;
@@ -313,12 +352,19 @@ main {
 }
 label {
 	color: white;
+	/* background-color: black; */
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	padding: 0.5rem;
+	width: 300px;
 	font-family: sans-serif;
 	cursor: pointer;
 }
 .uplIcon {
 	width: 20px;
+	margin-bottom: 9px;
+	margin-right: 10px;
 }  
 .uplBTN {
 	/* display: flex;
@@ -339,14 +385,22 @@ label {
 .LBTN {
 	display: flex;
 	justify-content: end;
-	margin-top: 100px;
+	/* margin-top: 100px; */
 }
-
+.uploadImg {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 50px;
+}
 .foot {
-	background: linear-gradient(90deg, #011007, #06191e, #02110E);
-	display: block;
-	margin-left: 20px;
-	margin-bottom: 20px;
+	/* background-color: red; */
+	/* background: linear-gradient(90deg, #011007, #06191e, #02110E); */
+	/* display: flex;
+	justify-content: start;
+	align-items: end; */
+	/* font-size: 1.7dvb; */
+	margin-left: 50px;
+	/* margin-top: 50px; */
 }
 
 a {
@@ -356,3 +410,6 @@ a:hover {
 	color: #d4d4d4;
 	text-decoration : none;
 }
+
+
+

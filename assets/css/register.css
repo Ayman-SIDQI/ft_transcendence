@@ -54,6 +54,7 @@ body {
 	background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Horizontal gradient */
 	display: flex;
 	flex-direction: column;
+	font-family: montserrat;
 }
 
 
@@ -68,7 +69,7 @@ main {
 
 #hook {
 	font-size: 10em;
-	font-family: zen tokyo zoo;
+	font-family: montserrat;
 	letter-spacing: 15px;
 	text-transform: uppercase;
 
@@ -104,7 +105,7 @@ main {
 	display: flex;
 	flex-direction: column;
 	text-align: center;
-	text-transform: uppercase;
+	/* text-transform: uppercase; */
   }
 
 .btn-gradient-signup {
@@ -129,13 +130,34 @@ a:hover {
 	text-decoration : none;
 }
 
-/* footer .navbar {
+footer .navbar {
     display: flex;
     justify-content: flex-start; 
     padding: 20px 3em;
-    background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Matches your navbar gradient */
+    background: linear-gradient(90deg, #011007, #06191e, #02110E); /* Matches your navbar gradient*/
+	font-family: montserrat;
+	font-size: 12px;
+}
 
+h1 {
+	font-family: montserrat;
+	font-size: 18px;
+	padding-bottom: 20px;
+	font-weight: bold;
+	color: #F8F8F8;
+}
 
+h6 {
+	font-family: montserrat;
+	font-size: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: bold;
+	color: #F8F8F8;
+}
 
-
-
+input::placeholder {
+	font-size: 10px;
+	color: #737373;
+	font-weight: bold;
+}
