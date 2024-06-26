@@ -165,15 +165,15 @@ body {
 }
 
 
-main {
-	background-color: #00dbff;
+/* main { */
+	/* background-color: #00dbff;
 	color: #ffffff;
 	display: flex;
 	flex-direction: column;
 	/* justify-content: center; */
-	align-items: center;
-	height: 100%;
-}
+	/* align-items: center;
+	height: 100%;  */
+/* } */
 /* 
 #hook {
 	font-size: 10em;
@@ -401,6 +401,12 @@ label {
 	/* font-size: 1.7dvb; */
 	margin-left: 50px;
 	/* margin-top: 50px; */
+	
+		/* position: relative; 
+		bottom: 0; 
+		left: 0; 
+		z-index: 10; */
+	
 }
 
 a {
