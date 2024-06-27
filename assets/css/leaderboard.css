@@ -1,0 +1,12 @@
+.box{
+    background-color: #282828;
+    color: white;
+    /* border: 1px solid blue; */
+    border-radius: 15px;
+    min-height: 30px;
+    display: flex;
+    justify-content: start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+}
