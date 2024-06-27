@@ -2,8 +2,8 @@
     background-color: #282828;
     color: white;
     /* border: 1px solid blue; */
-    border-radius: 15px;
-    min-height: 30px;
+    /* min-height: 30px; */
+    border-radius: 10px;
     display: flex;
     justify-content: start;
     padding-top: 20px;
