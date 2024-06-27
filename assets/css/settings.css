@@ -32,7 +32,9 @@
     display: none;
     position: absolute;
     background-color: #1c2324;
+	border-radius: 10px;
 	padding-left: 20px;
+	padding-bottom: 10px;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
@@ -44,7 +46,7 @@
     margin-top: 30px;
   }
 .userIcon {
-    width: 30px;
+    width: 20px;
     margin-right: 3px;
 }
 .username {
@@ -83,6 +85,7 @@
 	display: none;
 	position: absolute;
 	background-color: #1c2324;
+	border-radius: 10px;
 	min-width: 160px;
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	justify-content: center;
