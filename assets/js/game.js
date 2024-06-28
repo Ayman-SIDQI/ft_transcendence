@@ -21,7 +21,7 @@ class Obj {
         this.radius = radius;
         this.height = height;
         // this.width = width;
-        this.speed = 4;
+        this.speed = 8;
         // this.dirY = true; // Initialize dirY as a property of Obj
         // this.dirX = true;
     }
