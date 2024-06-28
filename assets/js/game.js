@@ -40,16 +40,19 @@ class Obj {
     }
 
     moveBall() {
-        ctx.clearRect(0, 0, docWidth + 100, docHeight)
-        drawPads(Pad1YPos, Pad2YPos)
         if (dirY) this.y += this.speed
         if (dirX) this.x += this.speed
         if (!dirY) this.y -= this.speed
         if (!dirX) this.x -= this.speed
+        if (this.y > docHeight) dirY = false
+        if (this.y < 0) dirY = true
+        ctx.clearRect(0, 0, docWidth + 100, docHeight)
+        drawPads(Pad1YPos, Pad2YPos)
         ctx.fillRect(docWidth / 2 - 5, 0, 10, docHeight)
         ctx.fillStyle = "white"
         ctx.fill()
         this.drawBall()
+        checkCollision(this.y, this.x)
     }
 }
 
@@ -65,6 +68,18 @@ function canvasSetup() {
     ball.drawBall();
 }
 
+function checkCollision(ballY, ballX) {
+    ballX = ballX - 5
+    let LoclPad1XPos = 50 + 12.5
+    distance1 = Math.abs(ballX - LoclPad1XPos)
+
+    if (distance1 < 5 && ballY > (Pad1YPos - 50) && Pad1YPos + 100 > ballY) dirX = true
+    ballX = ballX + 10
+    let LoclPad2XPos = docWidth - 50
+    distance2 = Math.abs(ballX - LoclPad2XPos)
+    if (distance2 < 5 && ballY > (Pad2YPos - 50) && Pad2YPos + 100 > ballY) dirX = false
+}
+
 
 canvasSetup();
 
@@ -72,6 +87,15 @@ canvasSetup();
 
 
 let RequestFrame = false;
+
+canvas.onclick = () => {
+    if (!RequestFrame) {
+        var ball = new Obj(DocWidth / 2, DocHeight / 2, 10)
+        ball.drawBall()
+        RequestFrame = true
+        MoveBallLoop(ball)
+    }
+}
 
 function moveBallLoop(ball) {
     ball.moveBall();
