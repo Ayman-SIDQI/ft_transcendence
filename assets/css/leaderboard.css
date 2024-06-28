@@ -4,7 +4,7 @@
     /* border: 1px solid blue; */
     /* min-height: 30px; */
     border-radius: 10px;
-    display: flex;
+    display: block;
     justify-content: start;
     padding-top: 20px;
     padding-bottom: 20px;
