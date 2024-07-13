@@ -1,0 +1,192 @@
+<html lang="en"><head><base href="https://pongers.com"></head><body <!doctype="" html="">&gt;
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pongers - Leaderboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0a0e14;
+            color: #ffffff;
+        }
+        .navbar {
+            background-color: #1c2128;
+        }
+        .leaderboard-card {
+            background-color: #1c2128;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .top-player {
+            background-color: #2d333b;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .table {
+            color: #ffffff;
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #2d333b;
+        }
+        .rank-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .rank-1 { background-color: #ffd700; color: #000; }
+        .rank-2 { background-color: #c0c0c0; color: #000; }
+        .rank-3 { background-color: #cd7f32; color: #000; }
+        .rank-other { background-color: #2d333b; }
+    </style>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Pongers</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <!-- Removed navigation items -->
+                </ul>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                        <img src="https://via.placeholder.com/30" alt="User Avatar" class="rounded-circle me-2">
+                        Username
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-5">Leaderboard</h1>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="top-player">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-badge rank-1 me-3">1</div>
+                        <img src="https://via.placeholder.com/40" alt="Username" class="player-avatar me-3">
+                        <div>
+                            <h5 class="mb-0">Username</h5>
+                            <small>Level: 7.1 | Winrate: 100% | 10W 0L</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="top-player">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-badge rank-2 me-3">2</div>
+                        <img src="https://via.placeholder.com/40" alt="Username" class="player-avatar me-3">
+                        <div>
+                            <h5 class="mb-0">Username</h5>
+                            <small>Level: 6.9 | Winrate: 80% | 8W 2L</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="top-player">
+                    <div class="d-flex align-items-center">
+                        <div class="rank-badge rank-3 me-3">3</div>
+                        <img src="https://via.placeholder.com/40" alt="Username" class="player-avatar me-3">
+                        <div>
+                            <h5 class="mb-0">Username</h5>
+                            <small>Level: 6.3 | Winrate: 70% | 7W 3L</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaderboard-card mt-5">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Level</th>
+                        <th>Win Rate</th>
+                        <th>Games Played</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>5</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>5.8</td>
+                        <td>46%</td>
+                        <td>4W 5L</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>5.3</td>
+                        <td>43%</td>
+                        <td>4W 7L</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>5.0</td>
+                        <td>42%</td>
+                        <td>3W 5L</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>4.9</td>
+                        <td>38%</td>
+                        <td>3W 7L</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>4.2</td>
+                        <td>32%</td>
+                        <td>3W 8L</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>3.9</td>
+                        <td>30%</td>
+                        <td>3W 10L</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td><img src="https://via.placeholder.com/30" alt="Username" class="player-avatar me-2"> Username</td>
+                        <td>3.0</td>
+                        <td>20%</td>
+                        <td>2W 10L</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body></html>

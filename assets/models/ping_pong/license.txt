@@ -1,0 +1,11 @@
+Model Information:
+* title:	Ping Pong -  (Photosensitivity)
+* source:	https://sketchfab.com/3d-models/ping-pong-photosensitivity-2ffc655793e44e2f962e8a12b9c7757c
+* author:	Tycho Magnetic Anomaly (https://sketchfab.com/Tycho_Magnetic_Anomaly)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Ping Pong -  (Photosensitivity)" (https://sketchfab.com/3d-models/ping-pong-photosensitivity-2ffc655793e44e2f962e8a12b9c7757c) by Tycho Magnetic Anomaly (https://sketchfab.com/Tycho_Magnetic_Anomaly) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
