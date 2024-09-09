@@ -1,5 +1,7 @@
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
+canvas.style.background = "black"
+canvas.style.border = "2px dashed white"
 let docHeight, docWidth;
 let Pad2YPos = (docHeight / 2) - 50;
 let Pad1YPos = (docHeight / 2) - 50;
@@ -7,6 +9,27 @@ let dirY = true; // Initialize dirY as a property of Obj
 let dirX = true;
 let Score1 = 0;
 let Score2 = 0;
+
+document.addEventListener('keydown', (e) => {
+	console.log(e.key)
+	if (e.key == "w") WKeyState = true;
+	if (e.key == "s") SKeyState = true;
+	if (e.key == "ArrowUp") OKeyState = true;
+	if (e.key == "ArrowDown") LKeyState = true;
+	if (e.key == "Enter" && !RequestFrame) {
+		ball = new Obj(docWidth / 2, docHeight / 2, 10, 10, 'red');
+		RequestFrame = true;
+		moveBallLoop(ball);
+	}
+});
+
+document.addEventListener('keyup', (e) => {
+	console.log(e.key)
+	if (e.key == "w") WKeyState = false;
+	if (e.key == "s") SKeyState = false;
+	if (e.key == "ArrowUp") OKeyState = false;
+	if (e.key == "ArrowDown") LKeyState = false;
+});
 
 function drawPads(Pad1YPos, Pad2YPos) {
 	let Pad1 = new Obj(((docWidth * 2) / 100), Pad1YPos, 25, 100, 'pink');
@@ -29,7 +52,7 @@ class Obj {
 	}
 
 	drawPad() {
-		ctx.fillStyle = this.color;
+		ctx.fillStyle = 'white';
 		ctx.fillRect(this.x, this.y, this.radius, this.height);
 	}
 
@@ -158,26 +181,6 @@ let SKeyState = false;
 let OKeyState = false;
 let LKeyState = false;
 
-document.addEventListener('keydown', (e) => {
-	console.log(e.key)
-	if (e.key == "w") WKeyState = true;
-	if (e.key == "s") SKeyState = true;
-	if (e.key == "ArrowUp") OKeyState = true;
-	if (e.key == "ArrowDown") LKeyState = true;
-	if (e.key == "Enter" && !RequestFrame) {
-		ball = new Obj(docWidth / 2, docHeight / 2, 10, 10, 'red');
-		RequestFrame = true;
-		moveBallLoop(ball);
-	}
-});
-
-document.addEventListener('keyup', (e) => {
-	console.log(e.key)
-	if (e.key == "w") WKeyState = false;
-	if (e.key == "s") SKeyState = false;
-	if (e.key == "ArrowUp") OKeyState = false;
-	if (e.key == "ArrowDown") LKeyState = false;
-});
 function GenerateRandomDir() {
 
 	return Boolean(Math.floor(Math.random() * 2))
