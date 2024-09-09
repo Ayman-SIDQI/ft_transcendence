@@ -13,12 +13,12 @@ export default class {
     async getHead() {
         return `
 		<section>
-			<nav class="navbar navbar-dark bg-dark">
+			<nav class="navbar navbarAB navbar-dark bg-dark">
 				<div class="pong">
 					
 					<nav class="pongList"></nav>
 					
-					<a data-link class="navbar-brand mb-3 h1" href="index.html">
+					<a data-link class="navbar-brand navbar-brandAB mb-3 h1" href="index.html">
 						P O N G E R S
 					</a>
 					<div class="collapse navbar-collapse justify-content-center" id="expandme"></div>
@@ -44,10 +44,10 @@ export default class {
 						</h5>
 					</div>
 					<div style="display: inherit; flex-direction: inherit; padding-left: 20px;">
-						<a data-link  href="profile.html">Profile</a>
-						<a data-link  href="#">Friends</a>
-						<a data-link  href="settings.html">Settings</a>
-						<a data-link  href="#">Log out</a>
+						<a aSI data-link  href="profile.html">Profile</a>
+						<a aSI data-link  href="#">Friends</a>
+						<a aSI data-link  href="settings.html">Settings</a>
+						<a aSI data-link  href="#">Log out</a>
 					</div>
 				</div>
             </div>`;
@@ -66,27 +66,27 @@ export default class {
 			<div class="dropdown-content2">
 				<input class="search" type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()"> <!-- filterFunction to filter search waw -->
 				<div class="cntPadd">
-					<a data-link  href="#">
+					<a aSI data-link  href="#">
 						<img src="static/assets/images/play.svg" alt="no img">
 						play
 					</a>
-					<a data-link  href="leaderboard.html">
+					<a aSI data-link  href="leaderboard.html">
 						<img src="static/assets/images/Leaderboard.svg" alt="no img">
 						Leaderboard
 					</a>
-					<a data-link  href="#">
+					<a aSI data-link  href="#">
 						<img src="static/assets/images/tournament.svg" alt="no img">
 						tournament
 					</a>
-					<a data-link  href="#">
+					<a aSI data-link  href="#">
 						<img src="static/assets/images/chat.svg" alt="no img">
 						chat
 					</a>
-					<a data-link  href="#">
+					<a aSI data-link  href="#">
 						<img src="static/assets/images/history.svg" alt="no img">
 						History
 					</a>
-					<a data-link  href="settings.html">
+					<a aSI data-link  href="settings.html">
 						<img src="static/assets/images/settings.svg" alt="no img">
 						Settings
 					</a>

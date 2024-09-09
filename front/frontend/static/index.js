@@ -60,6 +60,7 @@ const router = async () => {
 	[
 		{path: "/404.html", view: Er},
 		{path: "/", view: Index},
+		{path: "/index.html", view: Index},
 		{path: "/register.html", view: Register},
 		{path: "/settings.html", view: Settings},
 		{path: "/profile.html", view: Profile},

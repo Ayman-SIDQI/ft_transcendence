@@ -9,7 +9,7 @@ export default class extends AbstractView {
     async getHtml() {
         return `
         <main>
-		<div class="container"  >
+		<div class="container containerSET"  >
 			<div class="row">
 					<div class="settingDiv">
 						settings
