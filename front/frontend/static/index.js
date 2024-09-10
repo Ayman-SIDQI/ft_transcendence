@@ -10,6 +10,9 @@ import Er from "./views/error.js"
 // database need to store the profiles pics
 let profilepic;
 let iconpic;
+let userSigned = true;
+let savedPic;
+
 
 const navigateTo = url => {
 	history.pushState(null, null, url); //update the url in the history
@@ -36,9 +39,6 @@ function loadPic()
 {
 	//save the pic in a database after
 	profilepic = document.getElementById("profile-pic");
-	iconpic = document.getElementById("icon-pic");
-	let inputfile = document.getElementById("input-file");
-
 	if (profilepic && profilepic.style) 
 	{
 		profilepic.style.display = 'block';
@@ -47,14 +47,37 @@ function loadPic()
 		profilepic.style.width = '250px';
 		profilepic.style.height = '250px';
 		profilepic.style.borderRadius = '50%';
-	
-		iconpic.style.borderRadius = '50%';
 	}
+	iconpic = document.getElementById("icon-pic");
+	if (iconpic)
+	{
+		console.log(iconpic.src + "<---------- before ----------")
+		iconpic.style.borderRadius = '50%';
+		if (userSigned) // check if user is signed in database after
+		{
+			if (savedPic)
+			{
+					// console.log( "bef**>" + savedPic.src)
+					iconpic.src = savedPic.src;
+					if (profilepic)
+						profilepic.src = savedPic.src;
+					// console.log(iconpic.src + "<-- after ---")
+			}
+			
+		}
+	}
+
+	let inputfile = document.getElementById("input-file");
 	if (inputfile)
 	{
+		// console.log("inside inputfile")
 		inputfile.onchange = function(){
 			profilepic.src = URL.createObjectURL(inputfile.files[0]);
-			iconpic.src = URL.createObjectURL(inputfile.files[0]);
+			// iconpic.src = URL.createObjectURL(inputfile.files[0]);
+			// console.log( "  bef   " + iconpic.src)
+
+			// savedPic = profilepic;
+			// console.log("  aft    " + savedPic.src)
 		}
 	}
 }
@@ -125,8 +148,12 @@ const router = async () => {
 		// script.src = './static/assets/js/settings.js';
 		// document.body.appendChild(script);
 		
-		loadPic(); // add check if the pic is alredy there in the database
-		
+		const urlPath = window.location.pathname;
+		if (urlPath === "/settings.html" || urlPath === "/leaderboard.html" 
+			|| urlPath === "/profile.html"   || urlPath === "/userProfile.html" )
+		{
+			loadPic(); // add check if the pic is alredy there in the database
+		}
 };
 
 	document.addEventListener("DOMContentLoaded", () => {
@@ -140,6 +167,11 @@ const router = async () => {
 			{
 				e.preventDefault();
 				console.log("save in dataBase plz") // database
+
+				// add database here for pictures
+				savedPic = profilepic;
+				loadPic(); // add check if the pic is alredy there in the database
+
 			}
 			else if (e.target.matches(".cancel"))
 			{
@@ -168,7 +200,7 @@ const router = async () => {
 					if (profilepic)
 					{
 						profilepic.src = "static/assets/images/icon.svg";
-						iconpic.src = "static/assets/images/icon.svg";
+						// iconpic.src = "static/assets/images/icon.svg";
 					}
 					else
 						console.log('meh not found')// maybe output something
