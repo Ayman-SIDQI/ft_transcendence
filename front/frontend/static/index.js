@@ -9,6 +9,7 @@ import Er from "./views/error.js"
 
 // database need to store the profiles pics
 let profilepic;
+let profilepicP;
 let iconpic;
 let userSigned = true;
 let savedPic;
@@ -47,21 +48,33 @@ function loadPic()
 		profilepic.style.width = '250px';
 		profilepic.style.height = '250px';
 		profilepic.style.borderRadius = '50%';
+
+	}
+	profilepicP = document.getElementById("profile-pic");
+	if (profilepicP && profilepicP.style && window.location.pathname !== "/settings.html") 
+	{
+		profilepicP.style.display = 'block';
+		profilepicP.style.marginLeft = 'auto';
+		profilepicP.style.marginright = 'auto';
+		profilepicP.style.width = '80px';
+		profilepicP.style.height = '80px';
+		profilepicP.style.borderRadius = '50%';
+
 	}
 	iconpic = document.getElementById("icon-pic");
 	if (iconpic)
 	{
-		console.log(iconpic.src + "<---------- before ----------")
+		// console.log(iconpic.src + "<---------- before ----------")
 		iconpic.style.borderRadius = '50%';
 		if (userSigned) // check if user is signed in database after
 		{
 			if (savedPic)
 			{
-					// console.log( "bef**>" + savedPic.src)
+					console.log( "bef savedpic**>" + savedPic.src)
 					iconpic.src = savedPic.src;
 					if (profilepic)
 						profilepic.src = savedPic.src;
-					// console.log(iconpic.src + "<-- after ---")
+					console.log(iconpic.src + "<-- after iconpic ---")
 			}
 			
 		}
@@ -200,6 +213,7 @@ const router = async () => {
 					if (profilepic)
 					{
 						profilepic.src = "static/assets/images/icon.svg";
+						// if (savedPic)
 						// iconpic.src = "static/assets/images/icon.svg";
 					}
 					else
