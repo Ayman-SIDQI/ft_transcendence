@@ -44,7 +44,7 @@ export default class extends AbstractView {
 						<div class="panel">
 
 							<h1>Register</h1>
-							<form action="/hna_registered_page">
+							<form action="/index.html"> <!-- page likhas tmchi liha daba ila tregistra  -->
 								<div class="input-group mb-3">
 									<!-- <div class="input-group-prepend">
 										<span class="input-group-text" id="basic-addon1">@</span>
@@ -87,7 +87,7 @@ export default class extends AbstractView {
 								</button>
 							</div>
 							<br>
-								<button type="submit" class="btn btnS btn-info btn-gradient-signup btn-gradient-signupS">Register</button>
+								<button data-link type="submit" class="btn btnS btn-info btn-gradient-signup btn-gradient-signupS">Register</button>
 							</form>
 						</div>
 					</section>

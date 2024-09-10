@@ -78,7 +78,7 @@ export default class extends AbstractView {
 								</button>
 							</div>
 							<br>
-							<button type="submit" class="btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</button>
+							<button data-link type="submit" class="btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</button>
 
 							<small><br><br><p class="pSI">Don't have an account? <br><a class="aSI" data-link href="register.html">Sign up</a></p></small>
 							</form>
