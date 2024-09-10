@@ -40,10 +40,10 @@ export default class extends AbstractView {
 											</div>
 											
 											<div class="LBTN">
-												<button class="cancel">
+												<button class="cancel" >
 													cancel
 												</button>
-												<button class="save">
+												<button class="save" >
 													save
 												</button>
 											</div>
@@ -318,10 +318,10 @@ export default class extends AbstractView {
 										</div>
 									</div>
 									<div  class="r1BTN">
-										<button class="cancel">
+										<button class="cancel" >
 											cancel
 										</button>
-										<button class="save">
+										<button class="save" >
 											save
 										</button>
 									</div>
@@ -345,10 +345,10 @@ export default class extends AbstractView {
 										</div>
 									</div>
 									<div  class="r1BTN">
-										<button class="cancel">
+										<button class="cancel" >
 											cancel
 										</button>
-										<button class="save">
+										<button class="save" >
 											save
 										</button>
 									</div>
@@ -364,10 +364,10 @@ export default class extends AbstractView {
 										<div class="box to fill something after" style="height: 50px; background-color: #282828;"></div>
 									</div>
 									<div  class="r1BTN">
-										<button class="cancel">
+										<button class="cancel" >
 											cancel
 										</button>
-										<button class="save">
+										<button class="save" >
 											save
 										</button>
 									</div>

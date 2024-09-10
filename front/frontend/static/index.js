@@ -7,6 +7,10 @@ import UserProfile from "./views/userProfile.js"
 import Leaderboard from "./views/leaderboard.js"
 import Er from "./views/error.js"
 
+// database need to store the profiles pics
+let profilepic;
+let iconpic;
+
 const navigateTo = url => {
 	history.pushState(null, null, url); //update the url in the history
 	router();
@@ -31,10 +35,10 @@ const navigateTo = url => {
 function loadPic()
 {
 	//save the pic in a database after
-	let profilepic = document.getElementById("profile-pic");
-	let iconpic = document.getElementById("icon-pic");
+	profilepic = document.getElementById("profile-pic");
+	iconpic = document.getElementById("icon-pic");
 	let inputfile = document.getElementById("input-file");
-	
+
 	if (profilepic && profilepic.style) 
 	{
 		profilepic.style.display = 'block';
@@ -127,10 +131,48 @@ const router = async () => {
 
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
-			if (e.target.matches("[data-link")) // if the click is a link add href to the history and navigate to it
+			if (e.target.matches("[data-link]")) // if the click is a link add href to the history and navigate to it
 			{
 				e.preventDefault();
 				navigateTo(e.target.href);
+			}
+			else if (e.target.matches(".save"))
+			{
+				e.preventDefault();
+				console.log("save in dataBase plz") // database
+			}
+			else if (e.target.matches(".cancel"))
+			{
+				e.preventDefault();
+				// console.log("cancel is called clear the clicked target" )
+
+				// Right panel that have inputs passrd etc in seetings
+				const form = e.target.closest("form");
+				if (form)
+				{
+					const inputs = form.querySelectorAll("input");
+					inputs.forEach(element => {
+						element.value = "";
+					});
+
+					const country = form.querySelector("select");
+					if (country)
+						country.value = "Choose country";
+				}
+
+				// this is left panel that have profilepic in settings
+				const LpanPic = e.target.closest(".Lpan");
+				if (LpanPic)
+				{
+					LpanPic.querySelector("#profile-pic");
+					if (profilepic)
+					{
+						profilepic.src = "static/assets/images/icon.svg";
+						iconpic.src = "static/assets/images/icon.svg";
+					}
+					else
+						console.log('meh not found')// maybe output something
+				}
 			}
 		})
 		router();
