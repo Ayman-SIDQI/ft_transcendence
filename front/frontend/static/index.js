@@ -38,6 +38,8 @@ const navigateTo = url => {
 // }
 function loadPic()
 {
+	console.log("inside loadpic" )
+	
 	//save the pic in a database after
 	profilepic = document.getElementById("profile-pic");
 	if (profilepic && profilepic.style) 
@@ -65,16 +67,22 @@ function loadPic()
 	if (iconpic)
 	{
 		// console.log(iconpic.src + "<---------- before ----------")
+	console.log("inside iconpic" )
 		iconpic.style.borderRadius = '50%';
 		if (userSigned) // check if user is signed in database after
 		{
 			if (savedPic)
 			{
-					console.log( "bef savedpic**>" + savedPic.src)
+					console.log("inside savedpic" )
+					// console.log( "bef savedpic**>" + savedPic.src)
 					iconpic.src = savedPic.src;
+					console.log("savedp.src = " + savedPic.src )
+
 					if (profilepic)
 						profilepic.src = savedPic.src;
-					console.log(iconpic.src + "<-- after iconpic ---")
+					// console.log(iconpic.src + "<-- after iconpic ---")
+					// console.log('im gonna return')
+					// return;
 			}
 			
 		}
@@ -85,12 +93,12 @@ function loadPic()
 	{
 		// console.log("inside inputfile")
 		inputfile.onchange = function(){
-			profilepic.src = URL.createObjectURL(inputfile.files[0]);
-			// iconpic.src = URL.createObjectURL(inputfile.files[0]);
-			// console.log( "  bef   " + iconpic.src)
+		profilepic.src = URL.createObjectURL(inputfile.files[0]);
+		// iconpic.src = URL.createObjectURL(inputfile.files[0]);
+		// console.log( "  bef   " + iconpic.src)
 
-			// savedPic = profilepic;
-			// console.log("  aft    " + savedPic.src)
+		// savedPic = profilepic;
+		// console.log("  aft    " + savedPic.src)
 		}
 	}
 }
@@ -179,19 +187,23 @@ const router = async () => {
 			else if (e.target.matches(".save"))
 			{
 				e.preventDefault();
-				console.log("save in dataBase plz") // database
+				// console.log("save in dataBase plz") // database
+				console.log("inside save" )
 
 				// add database here for pictures
-				savedPic = profilepic;
+				savedPic = profilepic.cloneNode(true); // deep copy for an object
+				
+				console.log("profilpic.src = " + profilepic.src )
+
 				loadPic(); // add check if the pic is alredy there in the database
 
 			}
 			else if (e.target.matches(".cancel"))
 			{
 				e.preventDefault();
-				// console.log("cancel is called clear the clicked target" )
+				console.log("inside cancel" )
 
-				// Right panel that have inputs passrd etc in seetings
+				// Right panel that have inputs passwrd etc in seetings
 				const form = e.target.closest("form");
 				if (form)
 				{
@@ -209,10 +221,15 @@ const router = async () => {
 				const LpanPic = e.target.closest(".Lpan");
 				if (LpanPic)
 				{
-					LpanPic.querySelector("#profile-pic");
+					
+					// LpanPic.querySelector("#profile-pic");
 					if (profilepic)
 					{
+						console.log("inside Lpan prfpic" )
 						profilepic.src = "static/assets/images/icon.svg";
+				// console.log("profilpic.src = " + profilepic.src )
+				// console.log("savedpi.src = " + savedPic.src )
+				// console.log("iconp.src = " + iconpic.src )
 						// if (savedPic)
 						// iconpic.src = "static/assets/images/icon.svg";
 					}
