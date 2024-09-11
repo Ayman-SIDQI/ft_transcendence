@@ -191,11 +191,25 @@ const router = async () => {
 				console.log("inside save" )
 
 				// add database here for pictures
-				savedPic = profilepic.cloneNode(true); // deep copy for an object
-				
-				console.log("profilpic.src = " + profilepic.src )
 
-				loadPic(); // add check if the pic is alredy there in the database
+				//Rpan  fill after in database
+				// const formSave = e.target.closest("form")
+				// if (formSave)
+				// {
+					
+				// }
+
+				//Lpan
+				const LpanSave = e.target.closest(".Lpan");
+				if (LpanSave)
+				{
+					console.log("profilpic.src = " + profilepic.src )
+					
+					savedPic = profilepic.cloneNode(true); // deep copy for an object
+					loadPic(); 
+
+				}
+
 
 			}
 			else if (e.target.matches(".cancel"))
@@ -204,15 +218,15 @@ const router = async () => {
 				console.log("inside cancel" )
 
 				// Right panel that have inputs passwrd etc in seetings
-				const form = e.target.closest("form");
-				if (form)
+				const formCancel= e.target.closest("form");
+				if (formCancel)
 				{
-					const inputs = form.querySelectorAll("input");
+					const inputs = formCancel.querySelectorAll("input");
 					inputs.forEach(element => {
 						element.value = "";
 					});
 
-					const country = form.querySelector("select");
+					const country = formCancel.querySelector("select");
 					if (country)
 						country.value = "Choose country";
 				}
