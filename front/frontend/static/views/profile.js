@@ -19,7 +19,7 @@ export default class extends AbstractView {
 						<div style="margin-left: 30px;">
 							<div>
 								<div style="display: flex;flex-direction: row;">
-									<img src="./static/assets/images/icon.svg" style="width: 87px;">
+									<img id="profile-pic" src="./static/assets/images/icon.svg" style="width: 87px;">
 								</div>
 							</div>
 						</div>
