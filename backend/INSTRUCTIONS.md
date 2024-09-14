@@ -7,3 +7,6 @@ after doing so, join the venv using the command: ```source your-venv-name/bin/ac
 install the requirements using: ```pip install -r requirements.txt```
 
 to leave the venv use: ```deactivate```
+
+super user: pongers
+password: png123@123
