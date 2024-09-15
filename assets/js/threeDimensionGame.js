@@ -12,6 +12,25 @@ here is a step by step guide to do so:
 // x -> left and right
 // y -> up and down
 
+// listener is like a microphone that listens to the audio
+// const listener = new THREE.AudioListener();
+// this.camera.add(listener);
+
+// // this loads all sounds
+// const audioLoader = new THREE.AudioLoader();
+// const backgroundMusic = new THREE.Audio(listener);
+
+// audioLoader.load('./assets/soundtracks/TOM.mp3', function (buffer) {}
+//   // const now = performance.now();
+// // const delta = (now - this.then) / 1000; // Convert to seconds
+// // if (now - this.then >= 1000 / 60) {
+// //     this.then = now;
+// //     // console.log('Animating');
+// //     if (this.mixer) this.mixer.update(delta);
+
+// // }
+// requestAnimationFrame(this.animate.bind(this));
+
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -36,7 +55,7 @@ let stringScore = String(Score1).padStart(2, '0') + " " + String(Score2).padStar
 export class threeDimensionGame {
     speedX = 0.1;
     speedZ = 0.1;
-    
+
     constructor() {
         // this.animate = this.animate.bind(this);
         this.gameObjects = {
@@ -54,6 +73,7 @@ export class threeDimensionGame {
             wall2: null,
             goal1: null,
             goal2: null,
+            coin: null,
             textMesh: null
         };
 
@@ -98,8 +118,28 @@ export class threeDimensionGame {
         this.scene.add(directionalLight);
 
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        this.createTextMesh(stringScore);
+        const listener = new THREE.AudioListener();
+        this.camera.add(listener);
+
+        const audioLoader = new THREE.AudioLoader();
+        const backgroundMusic = new THREE.Audio(listener);
+
+        audioLoader.load('./assets/soundtracks/TOM.mp3', (buffer) => {
+            backgroundMusic.setBuffer(buffer);
+            backgroundMusic.setLoop(true);
+            backgroundMusic.setVolume(0.5);
+            backgroundMusic.play();
+        }, 
+        // Optionally, you can add a progress callback and error callback
+        (progress) => {
+            console.log('Loading progress: ' + (progress.loaded / progress.total * 100) + '%');
+        },
+        (error) => {
+            console.error('An error occurred while loading the background music', error);
+        });
+
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        this.createTextMesh(stringScore);
 
         const loader = new GLTFLoader();
         loader.load(
@@ -125,6 +165,7 @@ export class threeDimensionGame {
                 this.gameObjects.wall2 = findObject(gltf, 'Object_12002');
                 this.gameObjects.goal1 = findObject(gltf, 'Goal1');
                 this.gameObjects.goal2 = findObject(gltf, 'Goal2');
+                this.gameObjects.coin = findObject(gltf, 'Object_20');
                 // create a bounding box for the ball
                 this.gameObjects.boundingBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
                 this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
@@ -171,9 +212,9 @@ export class threeDimensionGame {
                 this.scene.add(Goal2Helper);
 
                 this.mixer = new THREE.AnimationMixer(this.model);
-                this.mixer.clipAction( gltf.animations[ 0 ] ).play();
-                this.renderer.setAnimationLoop( this.animate );
-                
+                this.mixer.clipAction(gltf.animations[0]).play();
+                this.renderer.setAnimationLoop(this.animate);
+
                 this.scene.add(gltf.scene);
             },
             (progress) => {
@@ -182,7 +223,7 @@ export class threeDimensionGame {
             (error) => {
                 console.error('An error occurred while loading the new model', error);
             }
-            );
+        );
 
 
         // GUI setup
@@ -249,8 +290,8 @@ export class threeDimensionGame {
     }
 
     handleKeyUP(e) {
-            console.log(e.key);
-            if(e.key == "a") AKeyState = false
+        console.log(e.key);
+        if (e.key == "a") AKeyState = false
         if (e.key == "d") DKeyState = false
         if (e.key == "ArrowLeft") ArrowLeftKeyState = false
         if (e.key == "ArrowRight") ArrowRightKeyState = false
@@ -281,8 +322,7 @@ export class threeDimensionGame {
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
-    // speedX = 0.01;
-    // speedZ = 0.01 = ;
+
     resetBall() {
 
         // Randomize ball speed
@@ -362,33 +402,52 @@ export class threeDimensionGame {
             this.resetBall();
             this.updateText(stringScore);
         }
-        // console.log("string score: ", stringScore);
-        // this.updateText();
-        // stringScore = Score1 + "   " + Score2;
-
-        // ball position - paddle center == if possitive move right else move left
     }
 
 
 
 
     animate() {
+        // const now = performance.now();
+        // const delta = (now - this.then) / 1000; // Convert to seconds
+        // if (now - this.then >= 1000 / 60) {
+        //     this.then = now;
+        //     // console.log('Animating');
+        //     if (this.mixer) this.mixer.update(delta);
+
+        // }
+
         requestAnimationFrame(this.animate.bind(this));
+        // requestAnimationFrame(this.animate.bind(this));
 
 
         // update the helper box
         if (gameStarted && !gamePaused) {
-        this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
-        this.gameObjects.boundingWall.setFromObject(this.gameObjects.wall2);
-        this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
-        this.gameObjects.boundingPaddle1.setFromObject(this.gameObjects.paddle1);
-        this.gameObjects.boundingPaddle2.setFromObject(this.gameObjects.paddle2);
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        // move ball
-        this.ballPhysics(this.gameObjects.ball)
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-        // move paddles
-        this.movePaddles();
+                this.gameObjects.coin.position.y = -0.2;
+            this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
+            this.gameObjects.boundingWall.setFromObject(this.gameObjects.wall2);
+            this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
+            this.gameObjects.boundingPaddle1.setFromObject(this.gameObjects.paddle1);
+            this.gameObjects.boundingPaddle2.setFromObject(this.gameObjects.paddle2);
+            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            // move ball
+            this.ballPhysics(this.gameObjects.ball)
+            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+            // move paddles
+            this.movePaddles();
+        }
+        else {
+            // Animate the coin when the game hasn't started
+            if (this.gameObjects.coin && !gameStarted) {
+                if (this.gameObjects.coin.position.y < 0.1)
+                    this.gameObjects.coin.position.y += 0.1;
+                else if (this.gameObjects.coin.position.y >= 0.1) {
+                    // sleep for one sec
+                    setTimeout(() => {
+                        this.gameObjects.coin.position.y = -0.2;
+                    }, 1000);
+                }
+            }
         }
 
         this.orbit.update();
