@@ -27,7 +27,7 @@ export default class extends AbstractView {
 						<div style="display: flex; flex-direction: column;justify-content: center;">
 							<div style="padding-left: 20px;padding-right: 20px; background-color: ;">
 								<div>
-									<h4>
+									<h4 class="usernameValue">
 										username
 									</h4>
 								</div>

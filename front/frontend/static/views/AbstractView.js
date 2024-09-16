@@ -33,9 +33,13 @@ export default class {
         return `
 		<div class="iconUsername">
                 <button class="username">
-                    <img class="userIcon" id="icon-pic" src="static/assets/images/icon.svg">
-                    Username
-                    <!-- <i class="fa fa-caret-down"></i> -->
+					<div>
+						<img class="userIcon" id="icon-pic" src="static/assets/images/icon.svg">
+					</div>
+					<div class="usernameValue">
+						Username
+					</div>
+					<!-- <i class="fa fa-caret-down"></i> -->
 				</button>
 				<div class="dropdown-content">
 					<div style="color: white; padding-top: 10px;">
@@ -47,7 +51,7 @@ export default class {
 						<a aSI data-link  href="profile.html">Profile</a>
 						<a aSI data-link  href="#">Friends</a>
 						<a aSI data-link  href="settings.html">Settings</a>
-						<a aSI data-link  href="#">Log out</a>
+						<a aSI data-link class="logout"  href="index.html">Log out</a>
 					</div>
 				</div>
             </div>`;

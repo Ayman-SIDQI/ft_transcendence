@@ -44,7 +44,7 @@ export default class extends AbstractView {
 						<div class="panel">
 
 							<h1>Register</h1>
-							<form action="/index.html"> <!-- page likhas tmchi liha daba ila tregistra  -->
+							<form class="registerForm" action="/index.html"> <!-- page likhas tmchi liha daba ila tregistra  -->
 								<div class="input-group mb-3">
 									<!-- <div class="input-group-prepend">
 										<span class="input-group-text" id="basic-addon1">@</span>

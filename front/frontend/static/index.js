@@ -11,11 +11,13 @@ import Er from "./views/error.js"
 let profilepic;
 let profilepicP;
 let iconpic;
-let userSigned = true;
+let userSigned = false;
 let savedPic;
-
+let signInValue;
+let globalUserName = "";
 
 const navigateTo = url => {
+	
 	history.pushState(null, null, url); //update the url in the history
 	router();
 };
@@ -36,41 +38,47 @@ const navigateTo = url => {
 // 		}
 // 	}
 // }
+
+function styleCSS(width, hight)
+{
+	profilepic.style.display = 'block';
+	profilepic.style.marginLeft = 'auto';
+	profilepic.style.marginright = 'auto';
+	profilepic.style.width = `${width}px`;
+	profilepic.style.height = `${hight}px`;
+	profilepic.style.borderRadius = '50%';
+}
+
 function loadPic()
 {
 	console.log("inside loadpic" )
+
+	//check if the username is in database after
+	if (globalUserName)
+	{
+		let allUsernames = document.querySelectorAll(".usernameValue");
+		allUsernames.forEach(element => (element.innerHTML = globalUserName));
+	}
 	
 	//save the pic in a database after
 	profilepic = document.getElementById("profile-pic");
-	if (profilepic && profilepic.style) 
+	if (profilepic && profilepic.style)
 	{
-		profilepic.style.display = 'block';
-		profilepic.style.marginLeft = 'auto';
-		profilepic.style.marginright = 'auto';
-		profilepic.style.width = '250px';
-		profilepic.style.height = '250px';
-		profilepic.style.borderRadius = '50%';
-
+		styleCSS(250, 250);
+		profilepicP = profilepic.cloneNode();
+		if (profilepicP && profilepicP.style && window.location.pathname !== "/settings.html") 
+			styleCSS(80, 80);
 	}
-	profilepicP = document.getElementById("profile-pic");
-	if (profilepicP && profilepicP.style && window.location.pathname !== "/settings.html") 
-	{
-		profilepicP.style.display = 'block';
-		profilepicP.style.marginLeft = 'auto';
-		profilepicP.style.marginright = 'auto';
-		profilepicP.style.width = '80px';
-		profilepicP.style.height = '80px';
-		profilepicP.style.borderRadius = '50%';
+	
 
-	}
 	iconpic = document.getElementById("icon-pic");
 	if (iconpic)
 	{
 		// console.log(iconpic.src + "<---------- before ----------")
 	console.log("inside iconpic" )
 		iconpic.style.borderRadius = '50%';
-		if (userSigned) // check if user is signed in database after
-		{
+		// if (userSigned) // check if user is signed in database after
+		// {
 			if (savedPic)
 			{
 					console.log("inside savedpic" )
@@ -85,7 +93,7 @@ function loadPic()
 					// return;
 			}
 			
-		}
+		// }
 	}
 
 	let inputfile = document.getElementById("input-file");
@@ -103,6 +111,13 @@ function loadPic()
 	}
 }
 
+function checkPathIfSigned(path)
+{
+	if (path === "/settings.html" || path === "/leaderboard.html" 
+		|| path === "/profile.html"   || path === "/userProfile.html")
+		return true;
+	return false;
+}
 const router = async () => {
 	const routes = 
 	[
@@ -125,6 +140,8 @@ const router = async () => {
 		};
 	});
 
+	// ----- to do: --------> if user is loged in change the index page so it will have username in navbar instead of register and signin
+
 	// console.log( 'here---------> ' +  potentialMatches);
 	let match = potentialMatches.find(potentialMatches => potentialMatches.isMatch);
 	if (!match)
@@ -135,6 +152,20 @@ const router = async () => {
 		};
 	}
 
+	const urlPath = window.location.pathname;
+	if (!userSigned && checkPathIfSigned(urlPath))
+	{
+		window.alert("log in first");
+		history.back();
+		return;
+	}
+	else if (userSigned && (urlPath === "/sign-in.html" || urlPath === "/register.html"))
+	{
+		window.alert("already signed in");
+		history.back();
+		return;
+	}
+	
 	const view = new match.route.view();
 	document.querySelector(".new-nav").innerHTML = await view.getHead();
 	document.querySelector("#new-body").innerHTML = await view.getHtml();
@@ -169,18 +200,42 @@ const router = async () => {
 		// script.src = './static/assets/js/settings.js';
 		// document.body.appendChild(script);
 		
-		const urlPath = window.location.pathname;
-		if (urlPath === "/settings.html" || urlPath === "/leaderboard.html" 
-			|| urlPath === "/profile.html"   || urlPath === "/userProfile.html" )
-		{
+		if (checkPathIfSigned(urlPath))
 			loadPic(); // add check if the pic is alredy there in the database
-		}
 };
 
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
-			if (e.target.matches("[data-link]")) // if the click is a link add href to the history and navigate to it
+			if (e.target.matches(".sign-in"))
 			{
+				console.log("here")
+				e.preventDefault();
+				let signForm = e.target.closest(".signInForm");
+				if (signForm)
+				{
+					userSigned = true;//add check later to see if the log in is a success in database
+					signInValue ={
+						username: signForm.querySelector("#username").value,
+						password: signForm.querySelector("#password").value
+					}
+					console.log(signInValue);
+					if (!signInValue.username || !signInValue.password)
+					{
+						window.alert("fill the blank"); // use somthing else to handle errors 
+						return ;
+					}
+					globalUserName = signInValue.username;
+				}
+				// navigateTo(e.target.href); //navugate to home page with user loged in
+			}
+			// else if (e.target.matches(".registerFrom"))
+			// {
+
+			// }
+			else if (e.target.matches("[data-link]")) // if the click is a link add href to the history and navigate to it
+			{
+				if (e.target.matches(".logout"))
+					userSigned = false;
 				e.preventDefault();
 				navigateTo(e.target.href);
 			}
@@ -209,8 +264,6 @@ const router = async () => {
 					loadPic(); 
 
 				}
-
-
 			}
 			else if (e.target.matches(".cancel"))
 			{

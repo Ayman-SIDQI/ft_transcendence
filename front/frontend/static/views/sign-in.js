@@ -44,7 +44,7 @@ export default class extends AbstractView {
 						<div class="panel">
 
 							<h1>Sign in</h1>
-							<form action="/hna_signin_page">
+							<form class="signInForm" action="/hna_signin_page">
 								<div class="input-group mb-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text" id="basic-addon1">@</span>
@@ -78,7 +78,7 @@ export default class extends AbstractView {
 								</button>
 							</div>
 							<br>
-							<button data-link type="submit" class="btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</button>
+							<button data-link type="submit" class="sign-in btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</button>
 
 							<small><br><br><p class="pSI">Don't have an account? <br><a class="aSI" data-link href="register.html">Sign up</a></p></small>
 							</form>

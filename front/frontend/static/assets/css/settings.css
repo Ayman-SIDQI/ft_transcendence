@@ -4,9 +4,9 @@
 .r1, .r2, .r3 {
 	color: white;
 	margin: 10px;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
 }
 .menuBtn {
 	display: inline-block;
@@ -49,6 +49,7 @@
     margin-right: 3px;
 }
 .username {
+	display: flex;
     color: #cde0e3;
     background-color: inherit;
     border: none;
@@ -63,7 +64,7 @@
   }
 
 .pong {
-display: flex;
+	display: flex;
 }
 
 /* start end menu drop content */
