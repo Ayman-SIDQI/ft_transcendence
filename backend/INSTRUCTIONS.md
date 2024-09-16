@@ -10,4 +10,3 @@ to leave the venv use: ```deactivate```
 
 super user: pongers-admin
 password: leetpongers123
-email: pongers@example.xyz
