@@ -25,6 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirm', None)
         user = User.objects.create_user(
             username=validated_data['username'],
+            
             email=validated_data['email'],
             password=validated_data['password']
         )
