@@ -9,4 +9,5 @@ install the requirements using: ```pip install -r requirements.txt```
 to leave the venv use: ```deactivate```
 
 super user: pongers-admin
-email: pongers@1337.ma
+password: leetpongers123
+email: pongers@example.xyz
