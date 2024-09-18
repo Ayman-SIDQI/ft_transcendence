@@ -18,6 +18,10 @@ class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
+        if username is None or password is None:
+            return Response({
+                "error": "Please provide both username and password"
+            })
         user = authenticate(username=username, password=password)
         if user:
             return Response({'good': 'good'}, status=status.HTTP_200_OK)
