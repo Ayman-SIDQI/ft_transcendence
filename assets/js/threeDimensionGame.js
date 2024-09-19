@@ -12,25 +12,6 @@ here is a step by step guide to do so:
 // x -> left and right
 // y -> up and down
 
-// listener is like a microphone that listens to the audio
-// const listener = new THREE.AudioListener();
-// this.camera.add(listener);
-
-// // this loads all sounds
-// const audioLoader = new THREE.AudioLoader();
-// const backgroundMusic = new THREE.Audio(listener);
-
-// audioLoader.load('./assets/soundtracks/TOM.mp3', function (buffer) {}
-//   // const now = performance.now();
-// // const delta = (now - this.then) / 1000; // Convert to seconds
-// // if (now - this.then >= 1000 / 60) {
-// //     this.then = now;
-// //     // console.log('Animating');
-// //     if (this.mixer) this.mixer.update(delta);
-
-// // }
-// requestAnimationFrame(this.animate.bind(this));
-
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -55,6 +36,7 @@ let stringScore = String(Score1).padStart(2, '0') + " " + String(Score2).padStar
 export class threeDimensionGame {
     speedX = 0.1;
     speedZ = 0.1;
+    backgroundMusic = null;
 
     constructor() {
         // this.animate = this.animate.bind(this);
@@ -122,21 +104,19 @@ export class threeDimensionGame {
         this.camera.add(listener);
 
         const audioLoader = new THREE.AudioLoader();
-        const backgroundMusic = new THREE.Audio(listener);
+        this.backgroundMusic = new THREE.Audio(listener);
 
         audioLoader.load('./assets/soundtracks/TOM.mp3', (buffer) => {
-            backgroundMusic.setBuffer(buffer);
-            backgroundMusic.setLoop(true);
-            backgroundMusic.setVolume(0.5);
-            backgroundMusic.play();
-        }, 
-        // Optionally, you can add a progress callback and error callback
-        (progress) => {
-            console.log('Loading progress: ' + (progress.loaded / progress.total * 100) + '%');
+            this.backgroundMusic.setBuffer(buffer);
+            this.backgroundMusic.setLoop(true); // sound will repeat when done
+            this.backgroundMusic.setVolume(0.5);
         },
-        (error) => {
-            console.error('An error occurred while loading the background music', error);
-        });
+            (progress) => {
+                console.log('Loading progress: ' + (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('An error occurred while loading the background music', error);
+            });
 
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         this.createTextMesh(stringScore);
@@ -264,7 +244,7 @@ export class threeDimensionGame {
             self.gameObjects.textMesh = textMesh;
             textMesh.position.set(-2.5, -0.3, -4); // Position the text
 
-            textMesh.rotation.x = -Math.PI / 2; // why pi/2
+            textMesh.rotation.x = -Math.PI / 2;
 
             self.scene.add(textMesh);
         });
@@ -418,12 +398,13 @@ export class threeDimensionGame {
         // }
 
         requestAnimationFrame(this.animate.bind(this));
-        // requestAnimationFrame(this.animate.bind(this));
 
-
-        // update the helper box
         if (gameStarted && !gamePaused) {
-                this.gameObjects.coin.position.y = -0.2;
+            this.gameObjects.coin.position.y = -0.2;
+            if (!this.backgroundMusic.isPlaying) 
+                {
+                    console.log("Playing music");
+                    this.backgroundMusic.play();}
             this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
             this.gameObjects.boundingWall.setFromObject(this.gameObjects.wall2);
             this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
@@ -452,6 +433,5 @@ export class threeDimensionGame {
 
         this.orbit.update();
         this.renderer.render(this.scene, this.camera);
-        // this.scene.add(textMesh);
     }
 }
