@@ -25,6 +25,8 @@ let userSigned = false;
 let savedPic;
 let signInValue;
 let globalUserName = "";
+let urlPath;
+
 
 const navigateTo = url => {
 	
@@ -163,7 +165,7 @@ const router = async () => {
 		};
 	}
 
-	const urlPath = window.location.pathname;
+	urlPath = window.location.pathname;
 	if (!userSigned && checkPathIfSigned(urlPath))
 	{
 		window.alert("log in first");
@@ -214,7 +216,9 @@ const router = async () => {
 			loadPic(); // add check if the pic is alredy there in the database
 		if (urlPath !== "/threeDimensionGame.html")
 		{
+			console.log("stop music");
 			document.querySelector("#canv").innerHTML = '';
+			window.game.stopMusic();
 		}
 };
 
