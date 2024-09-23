@@ -6,6 +6,16 @@ import Profile from "./views/profile.js"
 import UserProfile from "./views/userProfile.js"
 import Leaderboard from "./views/leaderboard.js"
 import Er from "./views/error.js"
+import Game from "./views/game.js"
+
+// to do: if signed and put settings.html from url it doesnt work it should
+
+
+import * as THREE from 'three';
+import { threeDimensionGame } from './assets/js/threeDimensionGame.js';
+
+	
+
 
 // database need to store the profiles pics
 let profilepic;
@@ -15,6 +25,8 @@ let userSigned = false;
 let savedPic;
 let signInValue;
 let globalUserName = "";
+let urlPath;
+
 
 const navigateTo = url => {
 	
@@ -129,6 +141,7 @@ const router = async () => {
 		{path: "/profile.html", view: Profile},
 		{path: "/leaderboard.html", view: Leaderboard},
 		{path: "/userProfile.html", view: UserProfile},
+		{path: "/threeDimensionGame.html", view: Game},
 		{path: "/sign-in.html", view: SignIn}
 	];
 
@@ -152,7 +165,7 @@ const router = async () => {
 		};
 	}
 
-	const urlPath = window.location.pathname;
+	urlPath = window.location.pathname;
 	if (!userSigned && checkPathIfSigned(urlPath))
 	{
 		window.alert("log in first");
@@ -199,14 +212,39 @@ const router = async () => {
 		// const script = document.createElement('script');
 		// script.src = './static/assets/js/settings.js';
 		// document.body.appendChild(script);
-		
 		if (checkPathIfSigned(urlPath))
 			loadPic(); // add check if the pic is alredy there in the database
+		if (urlPath !== "/threeDimensionGame.html")
+		{
+			console.log("stop music");
+			document.querySelector("#canv").innerHTML = '';
+			window.game.stopMusic();
+		}
 };
+
+function f()
+{
+	document.addEventListener('DOMContentLoaded', function(){
+		window.THREE = THREE;
+		const game = new threeDimensionGame();
+		window.game = game;
+	});
+}
 
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
-			if (e.target.matches(".sign-in"))
+			if (e.target.matches("#play"))
+			{
+				console.log("lala");
+				e.preventDefault();
+				navigateTo(e.target.href);
+				// document.addEventListener('DOMContentLoaded', function(){
+					window.THREE = THREE;
+					const game = new threeDimensionGame();
+					window.game = game;
+				// });
+			}
+			else if (e.target.matches(".sign-in"))
 			{
 				console.log("here")
 				e.preventDefault();
