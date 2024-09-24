@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('id', 'username')
 
 # class UserSerializer(serializers.ModelSerializer):
 #     email = serializers.EmailField(
