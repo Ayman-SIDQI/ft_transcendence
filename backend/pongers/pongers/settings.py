@@ -135,3 +135,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ]
 }
+
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
