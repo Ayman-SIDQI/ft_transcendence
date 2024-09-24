@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.validators import UniqueValidator
-from .models import UserProfile
+from accounts.models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
