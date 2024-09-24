@@ -9,7 +9,7 @@ import Er from "./views/error.js"
 import Game from "./views/game.js"
 
 // to do: if signed and put settings.html from url it doesnt work it should
-
+// to do: if url is given and user isnt loged send them to somewhere
 
 import * as THREE from 'three';
 import { threeDimensionGame } from './assets/js/threeDimensionGame.js';
@@ -126,7 +126,8 @@ function loadPic()
 function checkPathIfSigned(path)
 {
 	if (path === "/settings.html" || path === "/leaderboard.html" 
-		|| path === "/profile.html"   || path === "/userProfile.html")
+		|| path === "/profile.html"   || path === "/userProfile.html" 
+		|| path === "/threeDimensionGame.html")
 		return true;
 	return false;
 }
@@ -218,30 +219,33 @@ const router = async () => {
 		{
 			console.log("stop music");
 			document.querySelector("#canv").innerHTML = '';
-			window.game.stopMusic();
+			// window.game.stopMusic();
+			delete window.game;
 		}
 };
 
-function f()
-{
-	document.addEventListener('DOMContentLoaded', function(){
-		window.THREE = THREE;
-		const game = new threeDimensionGame();
-		window.game = game;
-	});
-}
+// function f()
+// {
+// 	document.addEventListener('DOMContentLoaded', function(){
+// 		window.THREE = THREE;
+// 		const game = new threeDimensionGame();
+// 		window.game = game;
+// 		delete window.game;
+// 	});
+// }
 
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
 			if (e.target.matches("#play"))
 			{
-				console.log("lala");
 				e.preventDefault();
 				navigateTo(e.target.href);
 				// document.addEventListener('DOMContentLoaded', function(){
+
 					window.THREE = THREE;
 					const game = new threeDimensionGame();
 					window.game = game;
+					// delete window.game
 				// });
 			}
 			else if (e.target.matches(".sign-in"))
