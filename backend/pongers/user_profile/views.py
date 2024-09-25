@@ -14,11 +14,15 @@ class UserProfileView(APIView):
         user = User.objects.get(id=user.id)
         user_profile = UserProfile.objects.get(user=user)
         user_profile = UserProfileSerializer(user_profile)
-        return Response({'profile': user_profile.data, 'username': str(username)})
+
+        return Response({
+            'profile': user_profile.data,
+            'username': str(username)
+        })
 
 class UpdateUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self, request, format=None):
+    def put(self, request, format=None):
         user = self.request.user
         username = user.username
 
@@ -26,7 +30,14 @@ class UpdateUserProfileView(APIView):
         first_name = data['first_name']
         last_name = data['last_name']
         city = data['city']
-        user = User.objects.get(id=user.id)
+
         UserProfile.objects.filter(user=user).update(first_name=first_name, last_name=last_name, city=city)
-        user_profile = UserProfileSerializer(user_profile)
-        return Response({'profile': user_profile.data, 'username': str(username)})
+
+        user_profile = UserProfile.objects.get(user=user)
+        serialized_profile = UserProfileSerializer(user_profile)
+
+        return Response({
+            'profile': serialized_profile.data,
+            'username': str(username) 
+        })
+        

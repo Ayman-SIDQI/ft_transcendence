@@ -6,7 +6,6 @@ from .serializers import UserSerializer
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.utils.decorators import method_decorator
 from .models import UserProfile, User
 from django.contrib import auth
@@ -71,7 +70,7 @@ class LoginView(APIView):
         password = data['password']
         try:
             user = auth.authenticate(username=username, password=password)
-            if user is not None:
+            if user:
                 auth.login(request, user)
                 return Response({'success': 'User authenticated', 'username': username })
             else:
@@ -79,7 +78,7 @@ class LoginView(APIView):
         except:
             return Response({'error': 'Something went wrong while logging in'})
     
-
+@method_decorator(csrf_protect, name='dispatch') 
 class LogoutView(APIView):
     def post(self, request, format=None):
         try:
