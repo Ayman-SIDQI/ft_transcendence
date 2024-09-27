@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.utils.decorators import method_decorator
 from .models import UserProfile, User
 from django.contrib import auth
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 @method_decorator(ensure_csrf_cookie, name='dispatch')
@@ -29,23 +31,58 @@ class RegisterView(APIView):
         password = data['password']
         confirm_password = data['confirm_password']
 
-        try:
-            if User.objects.filter(username=username).exists():
-                return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
-            if User.objects.filter(email=email).exists():
-                return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
-            if password == confirm_password:
-                user = User.objects.create_user(username=username, email=email, password=password)
-                user.save()
-                user = User.objects.get(id=user.id)
-                user_profile = UserProfile(user=user, username=username, email=email)
-                user_profile.save()
-                return Response({'success': 'User created successfully!'}, status=status.HTTP_201_CREATED)
-            else:
-                return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+        # def custom_password_validator(password):
+        #     if len(password) < 8:
+        #         raise ValidationError("This password is too short. It must contain at least 8 characters.")
+        #     if password.isdigit():
+        #         raise ValidationError("This password is entirely numeric.")
+        #     if not any(char.isdigit() for char in password):
+        #         raise ValidationError("This password must contain at least one digit.")
+        #     if not any(char.isalpha() for char in password):
+        #         raise ValidationError("This password must contain at least one letter.")
+        #     if not any(not char.isalnum() for char in password):
+        #         raise ValidationError("This password must contain at least one symbol.")
+        #     if not all([username, email, password, confirm_password]):
+        #         return Response({'error': 'Please fill in all fields'}, status=status.HTTP_400_BAD_REQUEST)
 
-        except:
-            return Response({'error': 'Error while registering user'}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(username=username).exists():
+            return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if User.objects.filter(email=email).exists():
+            return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if password != confirm_password:
+            return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # custom_password_validator(password)
+            validate_password(password)
+        except ValidationError as e:
+            return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password)
+            UserProfile.objects.create(user=user ,username=username, email=email)
+            return Response({'success': 'User created successfully!'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        # try:
+        #     if User.objects.filter(username=username).exists():
+        #         return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        #     if User.objects.filter(email=email).exists():
+        #         return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        #     if password == confirm_password:
+        #         user = User.objects.create_user(username=username, email=email, password=password)
+        #         user.save()
+        #         user = User.objects.get(id=user.id)
+        #         user_profile = UserProfile(user=user, username=username, email=email)
+        #         user_profile.save()
+        #         return Response({'success': 'User created successfully!'}, status=status.HTTP_201_CREATED)
+        #     else:
+        #         return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # except:
+        #     return Response({'error': 'Error while registering user'}, status=status.HTTP_400_BAD_REQUEST)
 
 @method_decorator(csrf_protect, name='dispatch')
 class CheckAuthenticatedView(APIView):
