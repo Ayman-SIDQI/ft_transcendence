@@ -13,11 +13,18 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 
+
 @method_decorator(ensure_csrf_cookie, name='dispatch')
 class GetCSRFToken(APIView):
     permission_classes = (permissions.AllowAny, )
     def get(self, request):
         return Response({'success': 'CSRF cookie set'})
+
+def validate_username(username):
+    if len(username) < 4:
+        raise ValidationError('Username must be at least 4 characters long')
+    if not username.isalnum():
+        raise ValidationError('Username must contain only alphanumeric characters')
 
 @method_decorator(csrf_protect, name='dispatch')
 class RegisterView(APIView):
@@ -31,19 +38,13 @@ class RegisterView(APIView):
         password = data['password']
         confirm_password = data['confirm_password']
 
-        # def custom_password_validator(password):
-        #     if len(password) < 8:
-        #         raise ValidationError("This password is too short. It must contain at least 8 characters.")
-        #     if password.isdigit():
-        #         raise ValidationError("This password is entirely numeric.")
-        #     if not any(char.isdigit() for char in password):
-        #         raise ValidationError("This password must contain at least one digit.")
-        #     if not any(char.isalpha() for char in password):
-        #         raise ValidationError("This password must contain at least one letter.")
-        #     if not any(not char.isalnum() for char in password):
-        #         raise ValidationError("This password must contain at least one symbol.")
-        #     if not all([username, email, password, confirm_password]):
-        #         return Response({'error': 'Please fill in all fields'}, status=status.HTTP_400_BAD_REQUEST)
+        if not all([username, email, password, confirm_password]):
+            return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            validate_username(username)
+        except ValidationError as e:
+            return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
 
         if User.objects.filter(username=username).exists():
             return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
@@ -55,7 +56,6 @@ class RegisterView(APIView):
             return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
         
         try:
-            # custom_password_validator(password)
             validate_password(password)
         except ValidationError as e:
             return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
