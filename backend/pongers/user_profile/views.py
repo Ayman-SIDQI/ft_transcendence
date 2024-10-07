@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from accounts.models import UserProfile
 from django.core.files.storage import default_storage
 
+
+
 class UserProfileView(APIView):
     def get(self, request, format=None):
         user = request.user
