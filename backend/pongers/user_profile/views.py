@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from accounts.models import UserProfile
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_password
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import update_session_auth_hash
 
 
