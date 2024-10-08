@@ -7,7 +7,9 @@ from .serializers import UserProfileSerializer
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
 from django.core.files.storage import default_storage
-
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_password
+from django.contrib.auth import update_session_auth_hash
 
 
 class UserProfileView(APIView):
@@ -55,34 +57,37 @@ class UpdateUserProfileView(APIView):
             return Response({
                 'error': 'No avatar file provided'
             }, status=status.HTTP_400_BAD_REQUEST)
-    # def put(self, request, format=None):
-    #     user = self.request.user
-    #     username = user.username
+        
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
 
-    #     data = self.request.data
-    #     # first_name = data['first_name']
-    #     # last_name = data['last_name']
-    #     # city = data['city']
+    def post(self, request, format=None):
+        user = self.request.user
+        # user_profile = UserProfile.objects.get(user=user)
+        current_password = request.data['current_password']
+        new_password = request.data['new_password']
+        confirm_new_password = request.data['confirm_new_password']
 
-    #     # UserProfile.objects.filter(user=user).update(first_name=first_name, last_name=last_name, city=city)
+        if not user.check_password(current_password):
+            return Response({
+                'error': 'Current password is incorrect'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        if new_password != confirm_new_password:
+            return Response({
+                'error': 'New passwords do not match'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_password(new_password, user)
+        except ValidationError as e:
+            return Response({
+                'error': e.messages
+            }, status=status.HTTP_400_BAD_REQUEST)
+        user.set_password(new_password)
+        user.save()
+        update_session_auth_hash(request, user)
+        return Response({
+            'message': 'Password updated successfully'
+        }, status=status.HTTP_200_OK)
 
-    #     user_profile = UserProfile.objects.get(user=user)
-    #     serialized_profile = UserProfileSerializer(user_profile)
-    #     if serialized_profile.is_valid():
-    #         if 'avatar' in request.FILES:
-    #             if user_profile.avatar:
-    #                 default_storage.delete(user_profile.avatar.path)
-    #             user_profile.avatar = request.FILES['avatar']
-    #             user_profile.save()
-    #         serialized_profile.save()
-    #         return Response({
-    #             'profile': serialized_profile.data,
-    #             'username': str(username)
-    #         })
-    #     return Response(serialized_profile.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        # return Response({
-        #     'profile': serialized_profile.data,
-        #     'username': str(username) 
-        # })
+    
         
