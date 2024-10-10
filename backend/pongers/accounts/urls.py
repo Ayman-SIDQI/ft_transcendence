@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LoginView, LogoutView, DeleteAccountView, CheckAuthenticatedView, GetUsersView
+from .views import RegisterView, LoginView, LogoutView, DeleteAccountView, CheckAuthenticatedView, GetUsersView, twofaView, RegisterTwoFAView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
@@ -9,6 +9,7 @@ urlpatterns = [
     path('delete-account/', DeleteAccountView.as_view(), name='delete-account'),
     path('get-users/', GetUsersView.as_view(), name='get-users'),
 	path('token/',TokenObtainPairView.as_view(),name='token-pair'),
-	path('refresh-token/',TokenRefreshView.as_view(), name='refresh-token')
+	path('refresh-token/',TokenRefreshView.as_view(), name='refresh-token'),
+	path('twofa/', twofaView.as_view(), name='twofa'),
+	path('twofa-setup/', RegisterTwoFAView.as_view(), name='tfa-setup')
 ]
-

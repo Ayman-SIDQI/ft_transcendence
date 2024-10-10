@@ -13,12 +13,8 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from .twofa_utils import verify_token, generate_qrcode, secret_twofa, generate_uri
 
-# @method_decorator(ensure_csrf_cookie, name='dispatch')
-# class GetCSRFToken(APIView):
-# 	permission_classes = (permissions.AllowAny, )
-# 	def get(self, request):
-# 		return Response({'success': 'CSRF cookie set'})
 
 def validate_username(username):
 	if len(username) < 4:
@@ -85,6 +81,36 @@ class RegisterView(APIView):
 		#	 return Response({'error': 'Error while registering user'}, status=status.HTTP_400_BAD_REQUEST)
 
 # @method_decorator(csrf_protect, name='dispatch')
+from django.core.files.base import ContentFile
+
+class RegisterTwoFAView(APIView):
+	def get(self, request, format=None):
+		data = self.request.data
+		username = data['username']
+		user = UserProfile.objects.get(username=username)
+		user.twofa_secret = secret_twofa()
+		user.save()
+		print (user.twofa_secret)
+		qrImageTag = generate_qrcode(generate_uri(username, user.twofa_secret))
+		return  Response({
+				'qrimage': qrImageTag,
+			})
+	def post(self, request, format=None):
+		data = self.request.data
+		username = data['username']
+		user = UserProfile.objects.get(username=username)
+		print (data['otp'])
+		print(user.email)
+		print(user.twofa_secret)
+		if verify_token(user.twofa_secret, data['otp']):
+			user.twofa_status = True
+			user.save()
+			return Response({'twofa': 'Succesfully enabled'}, status=status.HTTP_200_OK)
+		else:
+			print ("oheeeeheeee")
+			return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 class CheckAuthenticatedView(APIView):
 	permission_classes = (permissions.AllowAny, )
 	def get(self, request, format=None):
@@ -97,7 +123,40 @@ class CheckAuthenticatedView(APIView):
 		except:
 			return Response({'error': 'Error while checking authentication'})
 
-# @method_decorator(csrf_protect, name='dispatch')   
+# @method_decorator(csrf_protect, name='dispatch')  
+
+
+
+class twofaView(APIView):
+	def post(self, request, format=None):
+		print ("================am here====================")
+		try:
+			#IsAuthenticated = request.user.is_authenticated
+			print (request.user)
+			if 1: #IsAuthenticated:
+				#print(IsAuthenticated)
+				refresh = RefreshToken.for_user(user)
+				print (refresh)
+				data = self.request.data
+				username = data['username']
+				otp = data['otp']
+				user = UserProfile.objects.get(username=username)
+				if verify_token(user.twofa_secret ,otp):
+					
+					return Response({
+						'username': username,
+						'refresh': str(refresh),
+						'access': str(refresh.access_token)
+			}, status=status.HTTP_202_ACCEPTED)
+				else:
+					return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+		except:
+			return Response({'error': 'Error while checking authentication'},  status=status.HTTP_401_UNAUTHORIZED)
+		
+
+
+from django.shortcuts import redirect
+
 class LoginView(APIView):
 	permission_classes = (permissions.AllowAny, )
 		
@@ -105,14 +164,22 @@ class LoginView(APIView):
 		data = self.request.data
 		username = data['username']
 		password = data['password']
+		user = UserProfile.objects.get(username=username)
+		twofa_status = user.twofa_status
 		user = authenticate(username=username, password=password)
-		if user is not None:
+		if user is not None and not twofa_status:
 			refresh = RefreshToken.for_user(user)
 			return Response({
 				'username': username,
 				'refresh': str(refresh),
 				'access': str(refresh.access_token)
-			})
+			}, status=status.HTTP_202_ACCEPTED)
+		elif user is not None and twofa_status:
+			return Response({
+                'message': '2FA OTP required',
+                'username': username,
+                'redirect_url': 'twofa/'  # Provide the URL for the 2FA page
+            }, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
