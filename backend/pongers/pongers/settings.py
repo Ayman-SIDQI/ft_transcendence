@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'user_profile',
     'rest_framework',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,8 @@ DATABASES = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3000),
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=4000),
     'ROTATE_REFRESH_TOKENS': False, # we need to understand this
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',

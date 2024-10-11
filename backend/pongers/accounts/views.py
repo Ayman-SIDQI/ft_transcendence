@@ -98,17 +98,17 @@ class RegisterTwoFAView(APIView):
 	def post(self, request, format=None):
 		data = self.request.data
 		username = data['username']
+		otp = request.data.get('otp')
 		user = UserProfile.objects.get(username=username)
 		print (data['otp'])
 		print(user.email)
 		print(user.twofa_secret)
-		if verify_token(user.twofa_secret, data['otp']):
+		if verify_token(user.twofa_secret, otp):
 			user.twofa_status = True
 			user.save()
 			return Response({'twofa': 'Succesfully enabled'}, status=status.HTTP_200_OK)
 		else:
-			print ("oheeeeheeee")
-			return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+			return Response({'error': 'Invalid OTP'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CheckAuthenticatedView(APIView):
@@ -125,33 +125,54 @@ class CheckAuthenticatedView(APIView):
 
 # @method_decorator(csrf_protect, name='dispatch')  
 
-
-
 class twofaView(APIView):
-	def post(self, request, format=None):
-		print ("================am here====================")
+	def post(self, request):
+		username = request.data.get('username')
+		otp = request.data.get('otp')
 		try:
-			#IsAuthenticated = request.user.is_authenticated
-			print (request.user)
-			if 1: #IsAuthenticated:
-				#print(IsAuthenticated)
-				refresh = RefreshToken.for_user(user)
-				print (refresh)
-				data = self.request.data
-				username = data['username']
-				otp = data['otp']
-				user = UserProfile.objects.get(username=username)
-				if verify_token(user.twofa_secret ,otp):
+			user = UserProfile.objects.get(username=username)
+			print(user.login_status)
+			if (user.login_status == False):
+				return Response({'error': 'User not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+			if verify_token(user.twofa_secret, otp):
+				refresh = RefreshToken.for_user(user.user)
+				return Response({
+					'username': username,
+					'refresh': str(refresh),
+					'access': str(refresh.access_token)
+				}, status=status.HTTP_200_OK)
+			else:
+				return Response({'error': 'Invalid OTP'}, status=status.HTTP_401_UNAUTHORIZED)
+		except UserProfile.DoesNotExist:
+			return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception:
+			return Response({'error': 'Error in 2FA verification'}, status=status.HTTP_400_BAD_REQUEST)
+
+# class twofaView(APIView):
+# 	def post(self, request, format=None):
+# 		print ("================am here====================")
+# 		data = self.request.data
+# 		username = request.data.get('username')
+# 		otp = request.data.get('otp')
+# 		try:
+# 			# IsAuthenticated = request.user.is_authenticated
+# 			print (request.user)
+# 			if 1: #IsAuthenticated:
+# 				#print(IsAuthenticated)
+# 				refresh = RefreshToken.for_user(user)
+# 				print (refresh)
+# 				user = UserProfile.objects.get(username=username)
+# 				if verify_token(user.twofa_secret ,otp):
 					
-					return Response({
-						'username': username,
-						'refresh': str(refresh),
-						'access': str(refresh.access_token)
-			}, status=status.HTTP_202_ACCEPTED)
-				else:
-					return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-		except:
-			return Response({'error': 'Error while checking authentication'},  status=status.HTTP_401_UNAUTHORIZED)
+# 					return Response({
+# 						'username': username,
+# 						'refresh': str(refresh),
+# 						'access': str(refresh.access_token)
+# 			}, status=status.HTTP_202_ACCEPTED)
+# 				else:
+# 					return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+# 		except:
+# 			return Response({'error': 'Error while checking authentication'},  status=status.HTTP_401_UNAUTHORIZED)
 		
 
 
@@ -164,22 +185,29 @@ class LoginView(APIView):
 		data = self.request.data
 		username = data['username']
 		password = data['password']
-		user = UserProfile.objects.get(username=username)
-		twofa_status = user.twofa_status
+		# user = UserProfile.objects.get(username=username)
+		user_profile = UserProfile.objects.get(username=username)
+		login_status = user_profile.login_status
+		twofa_status = user_profile.twofa_status
 		user = authenticate(username=username, password=password)
 		if user is not None and not twofa_status:
 			refresh = RefreshToken.for_user(user)
+			print(login_status)
+			user_profile.login_status = True
+			user_profile.save()
 			return Response({
 				'username': username,
 				'refresh': str(refresh),
 				'access': str(refresh.access_token)
 			}, status=status.HTTP_202_ACCEPTED)
 		elif user is not None and twofa_status:
+			user_profile.login_status = True
+			user_profile.save()
 			return Response({
-                'message': '2FA OTP required',
-                'username': username,
-                'redirect_url': 'twofa/'  # Provide the URL for the 2FA page
-            }, status=status.HTTP_202_ACCEPTED)
+				'message': '2FA OTP required',
+				'username': username,
+				'redirect_url': 'twofa/'  # Provide the URL for the 2FA page
+			}, status=status.HTTP_202_ACCEPTED)
 		else:
 			return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -187,10 +215,15 @@ class LoginView(APIView):
 class LogoutView(APIView):
 	def post(self, request, format=None):
 		try:
-			refresh_token = request.data["refresh_token"]
+			refresh_token = request.data.get("refresh_token")
 			token = RefreshToken(refresh_token)
 			token.blacklist()
+			username = request.data.get('username')
+			user = UserProfile.objects.get(username=username)
+			user.login_status = False
+			user.save()
 			auth.logout(request)
+			print ("the problem is here")
 			return Response({"success": "Successfully logged out."}, status=status.HTTP_200_OK)
 		except:
 			return Response({'error': 'Error logging out'}, status=status.HTTP_400_BAD_REQUEST)
@@ -205,9 +238,27 @@ class DeleteAccountView(APIView):
 		except:
 			return Response({'error': 'Something went wrong while deleting the user'})
 
+class Disable2FAView(APIView):
+	def post(self, request):
+		try:
+			data = self.request.data
+			username = request.data.get('username')
+			user = UserProfile.objects.get(username=username)
+			print (user.login_status)
+			if not user.login_status:
+				return Response({'error': 'User not logged in'}, status=status.HTTP_401_UNAUTHORIZED)
+			print( user.twofa_status)
+			if user.twofa_status:
+				user.twofa_status = False
+				user.save()
+				return Response({'success': '2FA is successfully disabled'}, status=status.HTTP_200_OK)
+			else:
+				return Response({'error': '2FA is not enabled'}, status=status.HTTP_400_BAD_REQUEST)
+		except:
+			return Response({'error': 'Error disabling 2FA'}, status=status.HTTP_400_BAD_REQUEST)
+
 class GetUsersView(APIView):
 	
-	#permission_classes = (permissions.AllowAny, )
 	permission_classes = [IsAuthenticated]
 	authentication_classes = [JWTAuthentication]
 	def get(self, request, format=None):
@@ -215,3 +266,4 @@ class GetUsersView(APIView):
 		users = User.objects.all()
 		users = UserSerializer(users, many=True)
 		return Response(users.data, )
+	
