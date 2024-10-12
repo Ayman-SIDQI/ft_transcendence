@@ -14,7 +14,7 @@ from django.core.exceptions import ValidationError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .twofa_utils import verify_token, generate_qrcode, secret_twofa, generate_uri
-
+from django.core.validators import EmailValidator
 
 def validate_username(username):
 	if len(username) < 4:
@@ -45,6 +45,11 @@ class RegisterView(APIView):
 		if User.objects.filter(username=username).exists():
 			return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 		
+		try:
+			EmailValidator()(email)
+		except ValidationError as e:
+			return Response({'error': 'Invalid email address'}, status=status.HTTP_400_BAD_REQUEST)
+
 		if User.objects.filter(email=email).exists():
 			return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
 		
