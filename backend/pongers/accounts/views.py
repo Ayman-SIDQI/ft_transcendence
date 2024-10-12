@@ -126,10 +126,13 @@ class CheckAuthenticatedView(APIView):
 # @method_decorator(csrf_protect, name='dispatch')  
 
 class twofaView(APIView):
+	permission_classes = (permissions.AllowAny, )
+	
 	def post(self, request):
-		username = request.data.get('username')
-		otp = request.data.get('otp')
 		try:
+			print ("am here")
+			username = request.data.get('username')
+			otp = request.data.get('otp')
 			user = UserProfile.objects.get(username=username)
 			print(user.login_status)
 			if (user.login_status == False):
@@ -190,7 +193,7 @@ class LoginView(APIView):
 		login_status = user_profile.login_status
 		twofa_status = user_profile.twofa_status
 		user = authenticate(username=username, password=password)
-		if user is not None and not twofa_status:
+		if user is not None and twofa_status is False:
 			refresh = RefreshToken.for_user(user)
 			print(login_status)
 			user_profile.login_status = True
