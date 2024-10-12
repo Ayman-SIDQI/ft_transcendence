@@ -11,5 +11,6 @@ class UserProfile(models.Model):
 	twofa_status = models.BooleanField(default=False)
 	twofa_secret = models.CharField(max_length=100, blank=True)
 	login_status = models.BooleanField(default=False)
+	
 	def __str__(self):
 		return self.username
