@@ -112,14 +112,17 @@ function loadPic()
 	if (inputfile)
 	{
 		// console.log("inside inputfile")
-		inputfile.onchange = function(){
-		profilepic.src = URL.createObjectURL(inputfile.files[0]);
+		// inputfile.onchange = function(){
+		inputfile.addEventListener("change", function(event) {
+			//URL.createObjectURL() is a method that creates a temporary URL (object URL) that points to the selected file, enabling the browser to display it.
+			profilepic.src = URL.createObjectURL(event.target.files[0]); //accesses the first file selected by the user from the file input (since multiple file selection is possible).
+		})
 		// iconpic.src = URL.createObjectURL(inputfile.files[0]);
 		// console.log( "  bef   " + iconpic.src)
 
 		// savedPic = profilepic;
 		// console.log("  aft    " + savedPic.src)
-		}
+		// }
 	}
 }
 
@@ -127,7 +130,7 @@ function checkPathIfSigned(path)
 {
 	if (path === "/settings.html" || path === "/leaderboard.html" 
 		|| path === "/profile.html"   || path === "/userProfile.html" 
-		|| path === "/threeDimensionGame.html")
+		/*|| path === "/threeDimensionGame.html"*/)
 		return true;
 	return false;
 }
@@ -233,7 +236,7 @@ const router = async () => {
 // 		delete window.game;
 // 	});
 // }
-
+let data;
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
 			if (e.target.matches("#play"))
@@ -248,6 +251,32 @@ const router = async () => {
 					// delete window.game
 				// });
 			}
+			else if (e.target.matches(".registerBtn"))
+			{
+				e.preventDefault();
+				console.log("here form")
+				let regform = e.target.closest(".registerForm");
+				if (regform)
+				{
+					data = {
+						username: regform.querySelector("#regUsername").value,
+						email: regform.querySelector("#regEmail").value,
+						password: regform.querySelector("#regPassword").value,
+						confirm_password: regform.querySelector("#regConfirm_password").value
+					};
+					console.log(data);
+				}
+				fetch("http://localhost:8000/register/", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(data)
+				})
+				.then(response => response.json())
+				.then(response => console.log("response from base: " ,response.success))
+				.catch(err => console.log(err))
+			}
 			else if (e.target.matches(".sign-in"))
 			{
 				console.log("here")
@@ -255,8 +284,8 @@ const router = async () => {
 				let signForm = e.target.closest(".signInForm");
 				if (signForm)
 				{
-					userSigned = true;//add check later to see if the log in is a success in database
-					signInValue ={
+					userSigned = true; //add check later to see if the log in is a success in database
+					signInValue = {
 						username: signForm.querySelector("#username").value,
 						password: signForm.querySelector("#password").value
 					}

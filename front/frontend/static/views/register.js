@@ -50,21 +50,21 @@ export default class extends AbstractView {
 										<span class="input-group-text" id="basic-addon1">@</span>
 									</div> -->
 									<input type="text" class="form-control inputS" placeholder="USERNAME" aria-label="Username"
-										aria-describedby="basic-addon1" id="username" name="username" required>
+										aria-describedby="basic-addon1" id="regUsername"  required>
 								</div>
 								<div class="input-group mb-3">
 									<input type="email" class="form-control inputS" placeholder="EMAIL" aria-label="Email"
-										aria-describedby="basic-addon2" id="email" name="email" required>
+										aria-describedby="basic-addon2" id="regEmail" name="email" required>
 								</div>
 								<div class="input-group mb-3">
 									<input type="password" class="form-control inputS" placeholder="PASSWORD"
-										aria-label="Password" aria-describedby="basic-addon2" id="password"
+										aria-label="Password" aria-describedby="basic-addon2" id="regPassword"
 										name="password" required>
 								</div>
 								<div class="input-group mb-3">
 									<input type="password" class="form-control inputS" placeholder="CONFIRM PASSWORD"
 										aria-label="Confirm Password" aria-describedby="basic-addon3"
-										id="confirm_password" name="confirm_password" required>
+										id="regConfirm_password" name="confirm_password" required>
 								</div>
 								<h6>Or</h6>
 								<div class="auth-form">
@@ -87,7 +87,7 @@ export default class extends AbstractView {
 								</button>
 							</div>
 							<br>
-								<button data-link type="submit" class="btn btnS btn-info btn-gradient-signup btn-gradient-signupS">Register</button>
+								<button data-link type="submit" class="registerBtn btn btnS btn-info btn-gradient-signup btn-gradient-signupS">Register</button>
 							</form>
 						</div>
 					</section>
