@@ -20,11 +20,10 @@ import { GLTFLoader } from 'https://unpkg.com/three/examples/jsm/loaders/GLTFLoa
 import { FontLoader } from 'https://unpkg.com/three/examples/jsm/loaders/FontLoader.js';
 import { TextGeometry } from 'https://unpkg.com/three/examples/jsm/geometries/TextGeometry.js';
 
-
-let AKeyState = false
-let DKeyState = false
-let ArrowLeftKeyState = false
-let ArrowRightKeyState = false
+let AKeyState = false;
+let DKeyState = false;
+let ArrowLeftKeyState = false;
+let ArrowRightKeyState = false;
 let gameStarted = false;
 let gamePaused = false;
 
@@ -33,29 +32,21 @@ export class threeDimensionGame {
 	speedX = 0.1;
 	speedZ = 0.1;
 	backgroundMusic = null;
-	PathAI = false;
-	once = true;
-
-
+	
 	constructor() {
 		this.Score1 = 0;
 		this.Score2 = 0;
-		// console.log("HAHAH", this.Score1, this.Score2);
+		console.log("HAHAH", this.Score1, this.Score2);
 		this.stringScore = String(this.Score1).padStart(2, '0') + " " + String(this.Score2).padStart(2, '0');
-		// console.log("MAMAM", this.stringScore);
+		console.log("MAMAM", this.stringScore);
 		// this.animate = this.animate.bind(this);
 		this.gameObjects = {
-
 			paddle1: null,
 			paddle2: null,
 			ball: null,
-			ballAI: null,
-			wallAI: null,
 			boundingBox: null,
-			boundingBoxAI: null,
 			boundingWall: null,
 			boundingWallTwo: null,
-			boundingWallAI: null,
 			boundingPaddle1: null,
 			boundingPaddle2: null,
 			boundingGoal1: null,
@@ -168,8 +159,6 @@ export class threeDimensionGame {
 				this.gameObjects.paddle1 = findObject(gltf, 'Object_12');
 				this.gameObjects.paddle2 = findObject(gltf, 'Object_14');
 				this.gameObjects.ball = findObject(gltf, 'Object_16');
-				this.gameObjects.ballAI = findObject(gltf, 'AI_ball');
-				this.gameObjects.wallAI = findObject(gltf, 'AI_target');
 				this.gameObjects.wall1 = findObject(gltf, 'Object_12001');
 				this.gameObjects.wall2 = findObject(gltf, 'Object_12002');
 				this.gameObjects.goal1 = findObject(gltf, 'Goal1');
@@ -177,14 +166,6 @@ export class threeDimensionGame {
 				this.gameObjects.coin = findObject(gltf, 'Object_20');
 				// create a bounding box for the ball
 
-				this.gameObjects.boundingWallAI = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-				this.gameObjects.boundingWallAI.setFromObject(this.gameObjects.wallAI);
-
-				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-				this.gameObjects.boundingBoxAI = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
-				this.gameObjects.boundingBoxAI.setFromObject(this.gameObjects.ballAI);
-
-				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 				this.gameObjects.boundingBox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 				this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
 
@@ -235,10 +216,6 @@ export class threeDimensionGame {
 
 				// box helper for bounding box
 
-				const AIwallHelper = new THREE.Box3Helper(this.gameObjects.boundingWallAI, 0xffff00);
-				this.scene.add(AIwallHelper);
-				const AIboxHelper = new THREE.Box3Helper(this.gameObjects.boundingBoxAI, 0xffff00);
-				this.scene.add(AIboxHelper);
 				const boxHelper = new THREE.Box3Helper(this.gameObjects.boundingBox, 0xffff00);
 				this.scene.add(boxHelper);
 				const wallHelper = new THREE.Box3Helper(this.gameObjects.boundingWall, 0xffff00);
@@ -342,10 +319,10 @@ export class threeDimensionGame {
 		if (AKeyState && !this.gameObjects.boundingPaddle1.intersectsBox(this.gameObjects.boundingWall))
 			this.gameObjects.paddle1.position.z -= 1;
 		// Move paddle 2
-		// if (ArrowLeftKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo))
-		// 	this.gameObjects.paddle2.position.z += 1;
-		// if (ArrowRightKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall))
-		// 	this.gameObjects.paddle2.position.z -= 1;
+		if (ArrowLeftKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo))
+			this.gameObjects.paddle2.position.z += 1;
+		if (ArrowRightKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall))
+			this.gameObjects.paddle2.position.z -= 1;
 	}
 
 	onWindowResize() {
@@ -369,10 +346,7 @@ export class threeDimensionGame {
 		this.speedZ *= directionZ;
 		// Reset ball position
 		this.gameObjects.ball.position.set(0, 0, 0);
-		this.PathAI = false;
-		this.once = true;
 	}
-
 
 	updateText(stringScore) {
 		// this.stringScore = String(this.Score1).padStart(2, '0') + " " + String(this.Score2).padStart(2, '0');
@@ -408,13 +382,7 @@ export class threeDimensionGame {
 			if (ballCenter.x - paddle2Center.x > 0 && this.speedZ < 0) this.speedZ = -this.speedZ
 			else if (this.speedZ < 0) this.speedZ = -this.speedZ
 		}
-
-
 		if (this.gameObjects.boundingBox.intersectsBox(this.gameObjects.boundingPaddle1)) {
-			// ai ball is spawned in the intersection place :p
-			this.gameObjects.ballAI.position.copy(this.gameObjects.ball.position);
-			this.PathAI = true;
-
 			if (ballCenter.z - paddle1Center.z > 0 && this.speedX < 0) {
 				this.speedX = -this.speedX
 				this.speedZ = -this.speedZ
@@ -427,21 +395,16 @@ export class threeDimensionGame {
 
 		if (this.gameObjects.boundingBox.intersectsBox(this.gameObjects.boundingPaddle2)) {
 			if (ballCenter.z - paddle2Center.z > 0 && this.speedX > 0) {
-				this.speedX = -this.speedX;
-				this.speedZ = -this.speedZ;
+				this.speedX = -this.speedX
+				this.speedZ = -this.speedZ
 			}
 			else if (this.speedX > 0) {
-				this.speedX = -this.speedX;
+				this.speedX = -this.speedX
 			}
 		}
 
-		this.gameObjects.ball.position.z += this.speedZ;
-		this.gameObjects.ball.position.x += this.speedX;
-
-		if (this.PathAI) {
-			// console.log(this.aiSpeedMultiplier);
-			this.updateAIBallPhysics(this.speedZ, this.speedX);
-		}
+		this.gameObjects.ball.position.z += this.speedZ
+		this.gameObjects.ball.position.x += this.speedX
 		if (this.gameObjects.boundingBox.intersectsBox(this.gameObjects.boundingGoal1)) {
 			this.Score1++;
 			this.stringScore = String(this.Score1).padStart(2, '0') + " " + String(this.Score2).padStart(2, '0');
@@ -456,104 +419,10 @@ export class threeDimensionGame {
 			this.updateText(this.stringScore);
 		}
 	}
-	updateAIBallPhysics(aiSpeedZ, aiSpeedX) {
-		const paddle1Center = new THREE.Vector3();
-		const paddle2Center = new THREE.Vector3();
-		const aiBallCenter = new THREE.Vector3();
-		const aiSpeedMultiplier = 1.5;
-		const targetPositionZ = this.gameObjects.ballAI.position.z;
 
+	
 
-		if (this.once) {
-			this.aiSpeedZ = aiSpeedZ;
-			this.aiSpeedX = aiSpeedX;
-			this.once = false;
-			console.log(aiSpeedZ
-				, aiSpeedX);
-		}
-		console.log(this.once);
-
-		this.gameObjects.boundingPaddle1.getCenter(paddle1Center);
-		this.gameObjects.boundingPaddle2.getCenter(paddle2Center);
-		this.gameObjects.boundingBoxAI.getCenter(aiBallCenter);
-		// console.log(this.gameObjects.boundingPaddle1.getCenter(paddle1Center));
-
-		// AI ball independent intersection logic
-		if (this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingWallTwo)) {
-			if (aiBallCenter.x - paddle1Center.x > 0 && this.aiSpeedZ > 0) this.aiSpeedZ = -this.aiSpeedZ
-			else if (this.aiSpeedZ > 0) this.aiSpeedZ = -this.aiSpeedZ
-		}
-		if (this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingWall)) {
-			if (aiBallCenter.x - paddle2Center.x > 0 && this.aiSpeedZ < 0) this.aiSpeedZ = -this.aiSpeedZ
-			else if (this.aiSpeedZ < 0) this.aiSpeedZ = -this.aiSpeedZ
-		}
-
-		if (this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingPaddle1)) {
-			if (aiBallCenter.z - paddle1Center.z > 0 && this.aiSpeedX < 0) {
-				this.aiSpeedX = -this.aiSpeedX;
-				this.aiSpeedZ = -this.aiSpeedZ;
-			} else if (this.aiSpeedX < 0) {
-				this.aiSpeedX = -this.aiSpeedX;
-				this.aiSpeedZ = -this.aiSpeedZ;
-			}
-		}
-
-		if (this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingPaddle2)) {
-			if (aiBallCenter.z - paddle2Center.z > 0 && this.aiSpeedX > 0) {
-				this.aiSpeedX = -this.aiSpeedX;
-				this.aiSpeedZ = -this.aiSpeedZ;
-			} else if (this.aiSpeedX > 0) {
-				this.aiSpeedX = -this.aiSpeedX;
-			}
-		}
-
-		// Update AI ball position, scaled by a speed multiplier
-		if (!this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingWallAI)) {
-			this.gameObjects.ballAI.position.z += this.aiSpeedZ * aiSpeedMultiplier;
-			this.gameObjects.ballAI.position.x += this.aiSpeedX * aiSpeedMultiplier;
-		}
-
-
-		if (ArrowLeftKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo)) {
-			this.gameObjects.paddle2.position.z += 1;
-		} else if (ArrowRightKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall)) {
-			this.gameObjects.paddle2.position.z -= 1;
-		}
-
-		// Additional AI movement logic, ensuring it respects the wall boundaries
-		// if (!ArrowLeftKeyState && !ArrowRightKeyState /* && this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingPaddle2) */) {
-		// 	const paddleSpeed = 1;
-		// 	if (this.gameObjects.paddle2.position.z < this.gameObjects.ballAI.position.z 
-		// 		&& !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo)) {
-		// 		this.gameObjects.paddle2.position.z += paddleSpeed; // Move paddle forward
-		// 	} else if (this.gameObjects.paddle2.position.z > this.gameObjects.ballAI.position.z 
-		// 		&& !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall)) {
-		// 		this.gameObjects.paddle2.position.z -= paddleSpeed; // Move paddle backward
-		// 	}
-		// }
-		const deadZone = 6.1;
-		const distanceToBall = this.gameObjects.ballAI.position.z - this.gameObjects.paddle2.position.z;
-
-		if (Math.abs(distanceToBall) > deadZone) {
-			const paddleSpeed = 1;
-			if (distanceToBall > 0 && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo)) {
-				this.gameObjects.paddle2.position.z += paddleSpeed; // Move paddle forward
-			} else if (distanceToBall < 0 && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall)) {
-				this.gameObjects.paddle2.position.z -= paddleSpeed; // Move paddle backward
-			}
-		}
-
-	}
-	// lastTime = 0;
-
-
-
-	animate(time) {
-		// const deltaTime = time - this.lastTime;
-		// this.lastTime = time;
-		// console.log("Frame Time:", deltaTime);
-
-
+	animate() {
 		requestAnimationFrame(this.animate.bind(this));
 		if (window.location.pathname !== "/threeDimensionGame.html") {
 			this.backgroundMusic.stop();
@@ -569,12 +438,9 @@ export class threeDimensionGame {
 			this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
 			this.gameObjects.boundingPaddle1.setFromObject(this.gameObjects.paddle1);
 			this.gameObjects.boundingPaddle2.setFromObject(this.gameObjects.paddle2);
-			this.gameObjects.boundingBoxAI.setFromObject(this.gameObjects.ballAI);
 			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 			// move ball
 			this.ballPhysics(this.gameObjects.ball);
-			// const lerpFactor = 0.1; // Adjust this value between 0 and 1
-			// this.gameObjects.ballAI.position.lerp(this.gameObjects.ball.position, lerpFactor);
 			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
 			// move paddles
 			this.movePaddles();
@@ -592,5 +458,6 @@ export class threeDimensionGame {
 		}
 		this.orbit.update();
 		this.renderer.render(this.scene, this.camera);
+		// }
 	}
 }

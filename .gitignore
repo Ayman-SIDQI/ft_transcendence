@@ -3,3 +3,4 @@
 node_modules
 pong-venv
 __pycache__
+.venv

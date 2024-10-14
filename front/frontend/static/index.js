@@ -127,7 +127,7 @@ function checkPathIfSigned(path)
 {
 	if (path === "/settings.html" || path === "/leaderboard.html" 
 		|| path === "/profile.html"   || path === "/userProfile.html" 
-		|| path === "/threeDimensionGame.html")
+		/* || path === "/threeDimensionGame.html" */)
 		return true;
 	return false;
 }
@@ -243,8 +243,8 @@ const router = async () => {
 				// document.addEventListener('DOMContentLoaded', function(){
 
 					window.THREE = THREE;
-					const game = new threeDimensionGame();
-					window.game = game;
+					/* const game =  */new threeDimensionGame();
+					/* window.game = game; */
 					// delete window.game
 				// });
 			}
