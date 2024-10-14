@@ -21,7 +21,7 @@ import { threeDimensionGame } from './assets/js/threeDimensionGame.js';
 let profilepic;
 let profilepicP;
 let iconpic;
-let userSigned = false;
+let userSigned = true;
 let savedPic;
 let signInValue;
 let globalUserName = "";
@@ -237,6 +237,7 @@ const router = async () => {
 // 	});
 // }
 let data;
+let access;
 	document.addEventListener("DOMContentLoaded", () => {
 		document.body.addEventListener("click", e => {
 			if (e.target.matches("#play"))
@@ -246,8 +247,8 @@ let data;
 				// document.addEventListener('DOMContentLoaded', function(){
 
 					window.THREE = THREE;
-					/* const game =  */new threeDimensionGame();
-					/* window.game = game; */
+					const game = new threeDimensionGame();
+					window.game = game;
 					// delete window.game
 				// });
 			}
@@ -281,22 +282,65 @@ let data;
 			{
 				console.log("here")
 				e.preventDefault();
-				let signForm = e.target.closest(".signInForm");
-				if (signForm)
+				// let signForm = e.target.closest(".signInForm");
+				// if (signForm)
+				// {
+				// 	userSigned = true; //add check later to see if the log in is a success in database
+				// 	signInValue = {
+				// 		username: signForm.querySelector("#username").value,
+				// 		password: signForm.querySelector("#password").value
+				// 	}
+				// 	console.log(signInValue);
+				// 	if (!signInValue.username || !signInValue.password)
+				// 	{
+				// 		window.alert("fill the blank"); // use somthing else to handle errors 
+				// 		return ;
+				// 	}
+				// 	globalUserName = signInValue.username;
+				// }
+				let regform = e.target.closest(".signInForm");
+				if (regform)
 				{
 					userSigned = true; //add check later to see if the log in is a success in database
-					signInValue = {
-						username: signForm.querySelector("#username").value,
-						password: signForm.querySelector("#password").value
-					}
-					console.log(signInValue);
-					if (!signInValue.username || !signInValue.password)
-					{
-						window.alert("fill the blank"); // use somthing else to handle errors 
-						return ;
-					}
-					globalUserName = signInValue.username;
+					data = {
+						username: regform.querySelector("#username").value,
+						password: regform.querySelector("#password").value,
+					};
+					console.log(data);
 				}
+				fetch("http://localhost:8000/login/", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(data)
+				})
+				.then(response => response.json())
+				.then(responseData => {
+					console.log("first data from json \n--------------", responseData, "-------------")
+					// console.log(responseData);
+					// console.log("this is the responseData json ------")
+					if (responseData.access)  // Check if token is there
+					{ 
+						access = responseData.access;
+						return fetch("http://localhost:8000/user/", { // we have the tokennow we send fetch request
+							method: 'GET',
+							headers: {
+								"Content-Type": "application/json",
+								"Authorization": "Bearer " + access
+							},
+							// credentials: 'include'
+						});
+					}
+					else
+						throw new Error("Login failed, token not received.");
+				})
+				.then(response => response.json())
+				.then(responseData =>{
+					globalUserName = responseData.profile.username;
+					console.log("data from base",responseData);
+				})
+				.catch(err => console.log(err))
 				// navigateTo(e.target.href); //navugate to home page with user loged in
 			}
 			// else if (e.target.matches(".registerFrom"))
@@ -383,3 +427,319 @@ let data;
 	window.addEventListener("popstate", router);
 
 
+// import Index from "./views/index.js"
+// import Register from "./views/register.js"
+// import SignIn from "./views/sign-in.js"
+// import Settings from "./views/settings.js"
+// import Profile from "./views/profile.js"
+// import UserProfile from "./views/userProfile.js"
+// import Leaderboard from "./views/leaderboard.js"
+// import Er from "./views/error.js"
+// import Game from "./views/game.js"
+
+// // to do: if signed and put settings.html from url it doesnt work it should
+// // to do: if url is given and user isnt loged send them to somewhere
+
+// import * as THREE from 'three';
+// import { threeDimensionGame } from './assets/js/threeDimensionGame.js';
+
+	
+
+// class App {
+//     constructor() {
+//         this.data = {};
+//         this.access = '';
+//         this.apiBaseUrl = "http://localhost:8000";
+//         this.userSigned = false; // Track the user's sign-in status
+//         this.globalUserName = ''; // Track the logged-in user's name
+//         this.profilepic = null;
+//         this.savedPic = null;
+
+//         this.routes = [
+//             { path: "/404.html", view: Er },
+//             { path: "/", view: Index },
+//             { path: "/index.html", view: Index },
+//             { path: "/register.html", view: Register },
+//             { path: "/settings.html", view: Settings },
+//             { path: "/profile.html", view: Profile },
+//             { path: "/leaderboard.html", view: Leaderboard },
+//             { path: "/userProfile.html", view: UserProfile },
+//             { path: "/threeDimensionGame.html", view: Game },
+//             { path: "/sign-in.html", view: SignIn }
+//         ];
+//         this.init();
+//     }
+
+//     init() {
+//         document.addEventListener("DOMContentLoaded", () => {
+//             document.body.addEventListener("click", (e) => this.handleBodyClick(e));
+//             this.router(); // Call router on page load
+//         });
+
+// 		// Add popstate listener
+//         window.addEventListener("popstate", () => this.router()); // Ensure `router` method is called on popstate
+//     }
+
+//     async router() {
+//         const potentialMatches = this.routes.map(route => ({
+//             route,
+//             isMatch: window.location.pathname === route.path
+//         }));
+
+//         let match = potentialMatches.find(potentialMatch => potentialMatch.isMatch);
+//         if (!match) {
+//             match = { route: this.routes[0] }; // 404 page route
+//         }
+
+//         const urlPath = window.location.pathname;
+//         if (!this.userSigned && this.checkPathIfSigned(urlPath)) {
+//             window.alert("Please log in first.");
+//             history.back();
+//             return;
+//         } else if (this.userSigned && (urlPath === "/sign-in.html" || urlPath === "/register.html")) {
+//             window.alert("Already signed in.");
+//             history.back();
+//             return;
+//         }
+
+//         const view = new match.route.view();
+//         await this.updateView(view);
+
+//         if (this.checkPathIfSigned(urlPath)) {
+//             this.loadPic(); // Check if pic is already in the database
+//         }
+
+//         if (urlPath !== "/threeDimensionGame.html") {
+//             this.stopGameMusic();
+//         }
+//     }
+
+//     handleBodyClick(e) {
+//         if (e.target.matches("#play")) {
+// 			e.preventDefault();
+// 			this.startGame(e);
+//         } else if (e.target.matches(".registerBtn")) {
+// 			e.preventDefault();
+// 			this.registerUser(e);
+//         } else if (e.target.matches(".sign-in")) {
+// 			e.preventDefault();
+// 			this.signInUser(e);
+//         } else if (e.target.matches("[data-link]")) {
+// 			e.preventDefault();
+// 			this.handleNavigation(e);
+//         } else if (e.target.matches(".logout")) {
+// 			e.preventDefault();
+// 			this.logoutUser();
+//         } else if (e.target.matches(".save")) {
+// 			e.preventDefault();
+// 			this.saveProfilePicture(e);
+//         } else if (e.target.matches(".cancel")) {
+// 			e.preventDefault();
+// 			this.cancelChanges(e);
+//         }
+//     }
+
+//     async updateView(view) {
+//         document.querySelector(".new-nav").innerHTML = await view.getHead();
+//         document.querySelector("#new-body").innerHTML = await view.getHtml();
+
+//         const userHtml = document.querySelector(".usr");
+//         if (userHtml) {
+//             userHtml.innerHTML = await view.getUsr();
+//             if (userHtml.innerHTML === "") {
+//                 userHtml.remove();
+//             }
+//         }
+
+//         const pongListHtml = document.querySelector(".pongList");
+//         if (pongListHtml) {
+//             pongListHtml.innerHTML = await view.getFlexPong();
+//             if (pongListHtml.innerHTML === "") {
+//                 pongListHtml.remove();
+//             }
+//         }
+//     }
+
+//     startGame(e) {
+// 		this.handleNavigation(e);
+//         window.THREE = THREE;
+//         const game = new threeDimensionGame();
+//         window.game = game;
+//     }
+
+//     stopGameMusic() {
+//         console.log("Stop game music");
+//         document.querySelector("#canv").innerHTML = '';
+//         delete window.game;
+//     }
+
+//     registerUser(e) {
+//         const regForm = e.target.closest(".registerForm");
+//         if (!regForm) return;
+
+//         this.data = this.getFormData(regForm, ["regUsername", "regEmail", "regPassword", "regConfirm_password"]);
+//         this.sendRequest(`${this.apiBaseUrl}/register/`, "POST", this.data)
+//             .then(response => console.log("Registration success:", response.success))
+//             .catch(err => console.error("Error registering user:", err));
+//     }
+
+//     signInUser(e) {
+//         const signInForm = e.target.closest(".signInForm");
+//         if (!signInForm) return;
+
+// 		this.userSigned = true;
+//         this.data = this.getFormData(signInForm, ["username", "password"]);
+//         this.sendRequest(`${this.apiBaseUrl}/login/`, "POST", this.data)
+//             .then(responseData => {
+//                 if (responseData.access) {
+//                     this.access = responseData.access;
+//                     return this.fetchUserProfile();
+//                 } else {
+//                     throw new Error("Login failed, token not received.");
+//                 }
+//             })
+//             .then(userProfile => {
+//                 this.globalUserName = userProfile.profile.username;
+//                 console.log("User Profile:", userProfile);
+//             })
+//             .catch(err => console.error("Error logging in:", err));
+//     }
+
+//     fetchUserProfile() {
+//         return this.sendRequest(`${this.apiBaseUrl}/user/`, "GET", null, {
+//             Authorization: `Bearer ${this.access}`
+//         });
+//     }
+
+//     handleNavigation(e) {
+//         const href = e.target.href;
+//         if (!href) return;
+
+//         this.navigateTo(href);
+//     }
+
+//     logoutUser() {
+//         this.userSigned = false;
+//         console.log("User logged out");
+//     }
+
+//     saveProfilePicture(e) {
+//         console.log("Profile picture saved");
+// 		const LpanSave = e.target.closest(".Lpan");
+// 		if (LpanSave)
+// 		{
+// 			console.log("profilpic.src = " + this.profilepic.src )
+			
+// 			this.savedPic = this.profilepic.cloneNode(true); // deep copy for an object
+// 			this.loadPic(); 
+
+// 		}
+//     }
+
+//     cancelChanges(e) {
+//         const formCancel = e.target.closest("form");
+//         if (formCancel) {
+//             this.clearForm(formCancel);
+//         }
+
+//         const LpanPic = e.target.closest(".Lpan");
+//         if (LpanPic && this.profilepic) {
+//             this.profilepic.src = "static/assets/images/icon.svg";
+//         }
+//     }
+
+//     getFormData(form, fields) {
+//         const data = {};
+//         fields.forEach(field => {
+//             data[field.replace("reg", "").toLowerCase()] = form.querySelector(`#${field}`).value;
+//         });
+//         return data;
+//     }
+
+//     clearForm(form) {
+//         form.querySelectorAll("input").forEach(input => input.value = "");
+//         const country = form.querySelector("select");
+//         if (country) country.value = "Choose country";
+//     }
+
+//     sendRequest(url, method = "GET", body = null, additionalHeaders = {}) {
+//         const headers = {
+//             "Content-Type": "application/json",
+//             ...additionalHeaders
+//         };
+
+//         return fetch(url, {
+//             method,
+//             headers,
+//             body: body ? JSON.stringify(body) : null
+//         }).then(response => {
+//             if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+//             return response.json();
+//         });
+//     }
+
+//     checkPathIfSigned(path) {
+//         const restrictedPaths = ["/settings.html", "/profile.html", "/userProfile.html", "/leaderboard.html"];
+//         return restrictedPaths.includes(path);
+//     }
+
+//     loadPic() {
+// 		console.log("inside loadpic");
+	
+// 		if (this.globalUserName) {
+// 			let allUsernames = document.querySelectorAll(".usernameValue");
+// 			allUsernames.forEach(element => {
+// 				element.innerHTML = this.globalUserName;
+// 			});
+// 		}
+	
+// 		this.profilepic = document.getElementById("profile-pic");
+// 		if (this.profilepic && this.profilepic.style) {
+// 			this.styleCSS(250, 250);
+// 			const profilepicP = this.profilepic.cloneNode();
+// 			if (profilepicP && profilepicP.style && window.location.pathname !== "/settings.html") {
+// 				this.styleCSS(80, 80);
+// 			}
+// 		}
+	
+// 		const iconpic = document.getElementById("icon-pic");
+// 		if (iconpic) {
+// 			iconpic.style.borderRadius = '50%';
+// 			if (this.savedPic) {
+// 				iconpic.src = this.savedPic.src;
+// 				if (this.profilepic) {
+// 					this.profilepic.src = this.savedPic.src;
+// 				}
+// 			}
+// 		}
+	
+// 		// Now handle file input change, just update the profile pic src after selection
+// 		let inputFile = document.getElementById("input-file");
+// 		if (inputFile) {
+// 			inputFile.addEventListener("change", (event) => {
+// 				const file = event.target.files[0];
+// 				if (file) {
+// 					this.profilepic.src = URL.createObjectURL(file); // Update the profile pic src
+// 				}
+// 			});
+// 		}
+// 	}
+	
+
+//     styleCSS(width, height) {
+//         this.profilepic.style.display = 'block';
+//         this.profilepic.style.marginLeft = 'auto';
+//         this.profilepic.style.marginRight = 'auto';
+//         this.profilepic.style.width = `${width}px`;
+//         this.profilepic.style.height = `${height}px`;
+//         this.profilepic.style.borderRadius = '50%';
+//     }
+
+//     navigateTo(url) {
+//         history.pushState(null, null, url);
+//         this.router(); // Re-route after URL update
+//     }
+// }
+
+// // Instantiate the App
+// const app = new App();
