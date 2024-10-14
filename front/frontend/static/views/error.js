@@ -1,5 +1,5 @@
 import AbstractView from "./AbstractView.js";
-
+// the class doesnt have name because its only used externally when its imported, if u gonn use it in the same file u have to name it
 export default class extends AbstractView {
     constructor() {
         super();
