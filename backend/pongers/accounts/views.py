@@ -37,7 +37,7 @@ class RegisterView(APIView):
 		if not all([username, email, password, confirm_password]):
 			return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
 		# comment this try catch for testing
-		# try:
+		# try: 
 		# 	validate_username(username)
 		# except ValidationError as e:
 		# 	return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
