@@ -1,0 +1,105 @@
+
+.navbarSI {
+	background: linear-gradient(90deg, #011007, #06191e, #02110E);
+}
+
+
+
+
+.mainSI {
+	color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+
+.navbar-brandSI {
+	color: #ffffff ;
+}
+
+.btnSI {
+	background-color: #ffffff;
+	padding: 6px 0px;
+	width: 160px;
+}
+
+.auth-form {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+/* panel for signin and register */
+.panel {
+	background-color: #151515;
+	box-shadow: #737373  0px 0px 30px;
+	border-radius: 10px;
+	padding: 15px 25px;
+	max-width: 414px;
+	min-height: 458px;
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	text-transform: uppercase;
+  }
+
+.btn-gradient-signupSI {
+	background: linear-gradient(to right, #358B9A, #0BC2DF);
+	cursor: pointer;
+	font-family: montserrat;
+	border: none;
+	font-weight: 700;
+	margin-top: 90px;
+}
+.btn-gradient-signupSI:hover {
+	background: linear-gradient(to right, #4b9db6, #4b9db6);
+	box-shadow: #00dbff 0px 0px 10px;
+}
+
+a {
+	color: grey;
+}
+a:hover {
+	color: #d4d4d4;
+	text-decoration : none;
+}
+.aSI {
+	color: grey;
+}
+.aSI:hover {
+	color: #d4d4d4;
+	text-decoration : none;
+}
+.pSI {
+	color: grey;
+}
+
+
+
+.foot {
+	/* background-color: blue; */
+	/* background: linear-gradient(90deg, #011007, #06191e, #02110E); */
+	/* /* display: flex; */
+	/* align-items: end;
+	justify-content: start; */
+	/* align-items: end; */ 
+	/* font-size: 1.7dvb; */
+	margin-left: 50px;
+	margin-bottom: 10px;
+	/* margin-top: 50px; */
+	
+		/* position: relative; 
+		bottom: 0; 
+		left: 0; 
+		z-index: 10; */
+	
+}
+footer{
+	background-color: linear-gradient(90deg, #011007, #06191e, #02110E);
+	height: 100\%;
+	display: flex;
+	align-items: end;
+	justify-content: start;
+}

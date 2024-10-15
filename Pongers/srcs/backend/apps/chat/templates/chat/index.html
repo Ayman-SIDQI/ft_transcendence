@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat SPA</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #1a1a1a, #2c2c2c);
+            color: #fff;
+        }
+        #chat-container {
+            width: 400px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        #chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        #recipient-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #00CED1;
+        }
+        #message-list {
+            height: 300px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        #message-input-container {
+            display: flex;
+            align-items: center;
+        }
+        #message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        #send-button {
+            background: none;
+            border: none;
+            color: #D4D4D4;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0 10px;
+            transition: color 0.3s;
+        }
+        #send-button:hover {
+            color: #D4D4D4;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+        .sent {
+            background-color: #00CED1;
+            color: #fff;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .received {
+            background-color: #444;
+            color: #fff;
+            align-self: flex-start;
+        }
+        h1 {
+            color: #00CED1;
+            text-align: center;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-header">
+            <h1>Chat Room: <span id="room-name-header"></span></h1>
+            <div id="recipient-name"></div>
+        </div>
+        <div id="message-list"></div>
+        <div id="message-input-container">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button id="send-button">➤</button>
+        </div>
+    </div>
+
+    <script src="/static/js/chat.js"></script>
+</body>
+</html>

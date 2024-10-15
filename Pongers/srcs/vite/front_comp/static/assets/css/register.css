@@ -1,0 +1,74 @@
+
+.navbarS {
+	background: linear-gradient(90deg, #011007, #06191e, #02110E);
+}
+
+
+
+
+.mainS {
+	color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+}
+
+
+.navbar-brand, .nav-link {
+	color: #ffffff ;
+}
+
+.btnS {
+	background-color: #ffffff;
+	padding: 6px 0px;
+	width: 160px;
+}
+
+.btn-gradient-signupS {
+	background: linear-gradient(to right, #358B9A, #0BC2DF);
+	cursor: pointer;
+	font-family: montserrat;
+	border: none;
+	font-weight: 700;
+}
+.btn-gradient-signupS:hover {
+	background: linear-gradient(to right, #4b9db6, #4b9db6);
+	box-shadow: #00dbff 0px 0px 10px;
+}
+
+
+
+
+/* footer .navbar {
+    display: flex;
+    justify-content: flex-start; 
+    padding: 20px 3em;
+    background: linear-gradient(90deg, #011007, #06191e, #02110E); 
+	font-family: montserrat;
+	font-size: 12px;
+}
+
+ h1 {
+	font-family: montserrat;
+	font-size: 18px;
+	padding-bottom: 20px;
+	font-weight: bold;
+	color: #F8F8F8;
+}
+
+h6 {
+	font-family: montserrat;
+	font-size: 10px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-weight: bold;
+	color: #F8F8F8;
+} */
+
+.inputS::placeholder {
+	font-size: 10px;
+	color: #737373;
+	font-weight: bold;
+}
