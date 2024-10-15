@@ -18,7 +18,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'https://unpkg.com/three/examples/jsm/loaders/FontLoader.js';
-import { TextGeometry } from 'https://unpkg.com/three/examples/jsm/geometries/TextGeometry.js';
+// import { RGBELoader } from 'https://unpkg.com/three/examples/jsm/geometries/RGBELoader.js';
+
+import { RGBELoader } from 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r152/examples/jsm/loaders/RGBELoader.js';
+
 
 
 let AKeyState = false
@@ -73,7 +76,7 @@ export class threeDimensionGame {
 		this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 		this.renderer = new THREE.WebGLRenderer({ antialias: true });
 		this.renderer.setSize(window.innerWidth, window.innerHeight);
-		// document.body.appendChild(this.renderer.domElement);
+
 
 		document.querySelector("#canv").appendChild(this.renderer.domElement);
 
@@ -82,29 +85,17 @@ export class threeDimensionGame {
 
 		this.orbit = new OrbitControls(this.camera, this.renderer.domElement);
 
-
-
-		const gradientMaterial = new THREE.ShaderMaterial({
-			uniforms: {},
-			vertexShader: `
-			void main() {
-				gl_Position = vec4(position, 1.0);
-			}
-			`,
-			fragmentShader: `
-			void main() {
-				gl_FragColor = vec4(mix(vec3(0.0039, 0.0392, 0.0275), vec3(0.0235, 0.098, 0.1176), gl_FragCoord.y / 1000.0), 1.0);
-			}
-			`,
-			depthWrite: false
-		});
-
-
-
-		const gradientPlane = new THREE.PlaneGeometry(2, 2);
-		const gradientMesh = new THREE.Mesh(gradientPlane, gradientMaterial);
-		this.scene.add(gradientMesh);
-
+		const hdrTextureURL = 'static/assets/background/';
+		new RGBELoader().setPath(hdrTextureURL).load(
+			'winter_evening_16k.hdr',
+			texture => {
+				texture.mapping = THREE.EquirectangularReflectionMapping;
+				this.scene.background = texture;
+				this.scene.environment = texture;
+			},
+			undefined,
+			error => console.error('Error loading HDR texture:', error)
+		)
 
 
 		this.camera.position.set(10, 10,);
