@@ -8,7 +8,7 @@ import Leaderboard from "./views/leaderboard.js"
 import Er from "./views/error.js"
 import Game from "./views/game.js"
 
-// to do: if signed and put settings.html from url it doesnt work it should
+// to do: if signed and put settings.html from url it doesnt work it shouldd
 // to do: if url is given and user isnt loged send them to somewhere
 
 import * as THREE from 'three';
