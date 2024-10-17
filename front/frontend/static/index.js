@@ -426,7 +426,6 @@
 
 // 	window.addEventListener("popstate", router);
 
-
 import Index from "./views/index.js"
 import Register from "./views/register.js"
 import SignIn from "./views/sign-in.js"
@@ -450,12 +449,14 @@ import profile from "./views/profile.js"
 class App {
     constructor() {
         this.data = {};
-        this.access = '';
+        this.access = null;
         this.apiBaseUrl = "http://localhost:8000";
         this.userSigned = false; // Track the user's sign-in status
         this.globalUserName = ''; // Track the logged-in user's name
         this.profilepic = null;
+        this.profilepictoDB = null;
         this.savedPic = null;
+        this.DBdata = null;
 
         this.routes = [
             { path: "/404.html", view: Er },
@@ -526,6 +527,7 @@ class App {
         if (urlPath !== "/threeDimensionGame.html") {
             this.stopGameMusic();
         }
+        console.log("inside router : ",this.profilepic)
     }
 
     async updateView(view) {
@@ -561,6 +563,12 @@ class App {
     }
 
     handleBodyClick(e) {
+        if (e.target.classList.contains('popup2FA'))
+            this.closeModal();
+        if (e.target.matches("#closeModal"))
+            this.closeModal();
+
+        
         if (e.target.matches("#play")) {
 			e.preventDefault();
 			this.startGame(e);
@@ -571,8 +579,6 @@ class App {
 			e.preventDefault();
 			this.signInUser(e);
         } else if (e.target.matches("[data-link]")) {
-            if (e.target.matches(".logout"))
-                this.userSigned = false;
 			e.preventDefault();
 			this.handleNavigation(e);
         }else if (e.target.matches(".save")) {
@@ -611,8 +617,13 @@ class App {
 		}
 	}
 	
+    closeModal() {
+        document.querySelector('.popup2FA.open').classList.remove('open');
+        document.body.classList.remove('popup2FA-open');
+    }
 
     async signInUser(e) {
+        
 		const signInForm = e.target.closest(".signInForm");
 		if (!signInForm) return;
 
@@ -624,15 +635,21 @@ class App {
 
 		try {
 			const responseData = await this.sendRequest(`${this.apiBaseUrl}/login/`, "POST", this.data);
-			
+			// if (responseData.message) 
+            // {
+            //         document.querySelector(".popup2FA").classList.add('open');
+            //         document.body.classList.add('popup2FA-open');
+            //         return;
+            //     //creat popup to  sendRequestTo 2fa
+            // }
 			if (responseData.access) {
 				this.access = responseData.access;
 
-				const userProfile = await this.fetchUserProfile();
-				this.globalUserName = userProfile.profile.username;
-                // this.profilepic = await this.getProfilePic();
-				console.log("User Profile:", userProfile);
+				this.DBdata = await this.fetchUserProfile();
+
+				this.globalUserName = this.DBdata.profile.username;
                 this.userSigned = true;
+
 			} else {
 				throw new Error("Login failed, token not received.");
 			}
@@ -641,48 +658,6 @@ class App {
 		}
 	}
 
-    async getProfilePic()
-    {
-        const inpValue = document.getElementById("input-file");
-        inpValue.addEventListener('change', e => {
-            // profilepic.src = URL.createObjectURL(e.target.files[0]);
-            // console.log("profil-----######" + profilepic.src)
-            const file = e.target.files[0];
-        
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const base64 = reader.result;
-                // console.log("base^^^^^^^^"+base64);
-                // profilepic.src = base64;
-        
-                const imgData = {
-                    'avatar': base64
-                };
-        
-                fetch(`${this.apiBaseUrl}/update/`, {
-                    method: 'PUT',
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${this.access}`
-                        // "Authorisation":"Bearer 'key ...'" access token 
-                    },
-                    body: JSON.stringify(imgData),
-                    // credentials: 'include'
-                })
-                .then(response => response.json())
-                .then(response =>{
-                    console.log("AVATAR ^^^^^^^Response from backend -> " , response)
-                    // return response;
-                    // document.querySelector("#cnt").innerHTML = `user name : ${response.recievedData.name}`
-                    // profilepic.src = response.recievedData.img;
-                })
-                .catch(error => console.log(error("Err")))
-            };
-        
-            reader.readAsDataURL(file);
-        });
-    }
-
     fetchUserProfile() {
         return this.sendRequest(`${this.apiBaseUrl}/user/`, "GET", null, {
             Authorization: `Bearer ${this.access}`
@@ -690,11 +665,80 @@ class App {
     }
 
     handleNavigation(e) {
+        if (e.target.matches(".logout"))
+        {
+            this.userSigned = false;
+            this.access = null;
+        }
         const href = e.target.href;
         if (!href) return;
 
         this.navigateTo(href);
     }
+
+    loadPic() {
+		console.log("inside loadpic");
+
+		if (this.globalUserName) {
+			let allUsernames = document.querySelectorAll(".usernameValue");
+			allUsernames.forEach(element => {element.innerHTML = this.globalUserName});
+		}
+	
+		this.profilepic = document.getElementById("profile-pic");
+		if (this.profilepic && this.profilepic.style)
+        {
+			this.styleCSS(250, 250);
+			if (window.location.pathname !== "/settings.html") // change size of profilpic if page is not setting
+				this.styleCSS(80, 80);
+		}
+
+        //test if the avatar is in the db first to see if we gonna display avatar or deflt img
+        if (this.DBdata.profile.avatar)
+        {
+            this.profilepic.src = `${this.apiBaseUrl}${this.DBdata.profile.avatar}`;
+            console.log("*************************>" ,this.DBdata.profile.avatar)
+        }
+
+		const iconpic = document.getElementById("icon-pic");
+		if (iconpic)
+        {
+			iconpic.style.borderRadius = '50%';
+			if (this.savedPic)
+            {
+				iconpic.src = this.savedPic.src;
+				if (this.profilepic)
+					this.profilepic.src = this.savedPic.src;
+			}
+		}
+	
+		// Now handle file input change, just update the profile pic src after selection
+		let inputFile = document.getElementById("input-file");
+		if (inputFile)
+        {
+            inputFile.addEventListener('change', e => {
+                const file = e.target.files[0];
+                this.profilepictoDB = file; // store the img file to send it to db
+                this.profilepic.src = URL.createObjectURL(file); //display the profilpic in the cercle
+
+                // const reader = new FileReader();
+                // reader.onloadend = () => {
+                //     const base64 = reader.result;
+                //     console.log("base^^^^^^^^"+base64);
+                //     this.profilepic.src = base64;
+                //     // const imgData = {
+                //     //     'img': base64
+                //     // };
+                // };
+                // reader.readAsDataURL(file);
+            });
+			// inputFile.addEventListener("change", (event) => {
+			// 	const file = event.target.files[0];
+			// 	if (file) {
+			// 		this.profilepic.src = URL.createObjectURL(file); // Update the profile pic src
+			// 	}
+			// });
+		}
+	}
 
     saveProfilePicture(e) {
         console.log("Profile picture saved");
@@ -704,28 +748,24 @@ class App {
 			console.log("profilpic.src = " + this.profilepic.src )
 			
 			this.savedPic = this.profilepic.cloneNode(true); // deep copy for an object
+
 			this.loadPic();
-            let data = {
-                "avatar": this.profilepic.src
-            }
+
+            const formData = new FormData(); // explain this after in chatgpt
+            formData.append('avatar', this.profilepictoDB); // Assuming 'profilepictoDB' is a file input element
+
             fetch(`${this.apiBaseUrl}/update/`, {
                 method: 'PUT',
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${this.access}`
-                    // "Authorisation":"Bearer 'key ...'" access token 
+                    "Authorization": `Bearer ${this.access}`  // Include the token if required
                 },
-                body: JSON.stringify(data),
-                // credentials: 'include'
+                body: formData,  // Send the FormData object
             })
             .then(response => response.json())
             .then(response =>{
-                console.log("AVATAR ^^^^^^^Response from backend -> " , response)
-                // return response;
-                // document.querySelector("#cnt").innerHTML = `user name : ${response.recievedData.name}`
-                // profilepic.src = response.recievedData.img;
+                console.log("AVATAR ^^^^^^^Response from backend -> ", response);
             })
-            .catch(error => console.log(error("Err")))
+            .catch(error => console.log("Err", error));
 		}
     }
 
@@ -779,62 +819,7 @@ class App {
     checkPathIfSigned(path) {
         const restrictedPaths = ["/settings.html", "/profile.html", "/userProfile.html", "/leaderboard.html"];
         return restrictedPaths.includes(path);
-    }
-
-    loadPic() {
-		console.log("inside loadpic");
-
-		if (this.globalUserName) {
-			let allUsernames = document.querySelectorAll(".usernameValue");
-			allUsernames.forEach(element => {element.innerHTML = this.globalUserName});
-		}
-	
-		this.profilepic = document.getElementById("profile-pic");
-		if (this.profilepic && this.profilepic.style)
-        {
-			this.styleCSS(250, 250);
-			if (window.location.pathname !== "/settings.html") // change size of profilpic if page is not setting
-				this.styleCSS(80, 80);
-		}
-	
-		const iconpic = document.getElementById("icon-pic");
-		if (iconpic)
-        {
-			iconpic.style.borderRadius = '50%';
-			if (this.savedPic)
-            {
-				iconpic.src = this.savedPic.src;
-				if (this.profilepic)
-					this.profilepic.src = this.savedPic.src;
-			}
-		}
-	
-		// Now handle file input change, just update the profile pic src after selection
-		let inputFile = document.getElementById("input-file");
-		if (inputFile)
-        {
-            inputFile.addEventListener('change', e => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const base64 = reader.result;
-                    console.log("base^^^^^^^^"+base64);
-                    this.profilepic.src = base64;
-                    // const imgData = {
-                    //     'img': base64
-                    // };
-                };
-                reader.readAsDataURL(file);
-            });
-			// inputFile.addEventListener("change", (event) => {
-			// 	const file = event.target.files[0];
-			// 	if (file) {
-			// 		this.profilepic.src = URL.createObjectURL(file); // Update the profile pic src
-			// 	}
-			// });
-		}
-	}
-	
+    }	
 
     styleCSS(width, height) {
         this.profilepic.style.display = 'block';
