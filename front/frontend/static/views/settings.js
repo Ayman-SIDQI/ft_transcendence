@@ -359,18 +359,18 @@ export default class extends AbstractView {
 								<h6>
 									two-factor authentication
 								</h6>
-								<form>
-									<div class="col-5">
-										<div class="box to fill something after" style="height: 50px; background-color: #282828;"></div>
-									</div>
-									<div  class="r1BTN">
-										<button class="cancel" >
-											cancel
-										</button>
-										<button class="save" >
-											save
-										</button>
-									</div>
+								<form style="display:flex;justify-content:center;">
+										<div class="box qrCode">
+											<div class="imgandqrdiv">
+												<img src="" alt="img ?">
+												qr code
+											</div>
+											<div  class="enableDiv">
+												<button class="enable" >
+													enable
+												</button>
+											</div>
+										</div>
 								</form>
 							</div>
 							<!-- </div> -->

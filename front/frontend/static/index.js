@@ -579,7 +579,7 @@ class App {
 			e.preventDefault();
 			this.signInUser(e);
         } else if (e.target.matches("[data-link]")) {
-			e.preventDefault();
+            e.preventDefault();
 			this.handleNavigation(e);
         }else if (e.target.matches(".save")) {
 			e.preventDefault();
@@ -587,7 +587,27 @@ class App {
         } else if (e.target.matches(".cancel")) {
 			e.preventDefault();
 			this.cancelChanges(e);
+        } else if (e.target.matches(".enable")) {
+            e.preventDefault();
+            this.enable2FA(e);
+        } else if (e.target.matches(".disable")) {
+            e.preventDefault();
+            this.disable2FA(e);
         }
+    }
+
+    enable2FA(e)
+    {
+        const en = e.target.closest(".enableDiv");
+        en.querySelector(".enable").innerHTML = "disable"
+        en.querySelector(".enable").classList = "disable"
+    }
+    disable2FA(e)
+    {
+        const dis = e.target.closest(".enableDiv")
+        dis.querySelector(".disable").innerHTML = "enable"
+        dis.querySelector(".disable").classList = "enable"
+
     }
 
     startGame(e) {
@@ -633,9 +653,13 @@ class App {
             password: signInForm.querySelector("#password").value,
         };
 
+        if (!this.data.username || !this.data.password)
+            window.alert("fill the blank");
+
 		try {
 			const responseData = await this.sendRequest(`${this.apiBaseUrl}/login/`, "POST", this.data);
-			// if (responseData.message) 
+			// if (responseData.message) // 2FA is activated if message is there
+            // if (true) // test if 2fa is enable
             // {
             //         document.querySelector(".popup2FA").classList.add('open');
             //         document.body.classList.add('popup2FA-open');
@@ -649,7 +673,7 @@ class App {
 
 				this.globalUserName = this.DBdata.profile.username;
                 this.userSigned = true;
-
+			    this.handleNavigation(e);
 			} else {
 				throw new Error("Login failed, token not received.");
 			}
@@ -671,6 +695,7 @@ class App {
             this.access = null;
         }
         const href = e.target.href;
+            console.log("lalalalalalal", href)
         if (!href) return;
 
         this.navigateTo(href);
@@ -693,7 +718,7 @@ class App {
 		}
 
         //test if the avatar is in the db first to see if we gonna display avatar or deflt img
-        if (this.DBdata.profile.avatar)
+        if (this.DBdata && this.DBdata.profile.avatar)
         {
             this.profilepic.src = `${this.apiBaseUrl}${this.DBdata.profile.avatar}`;
             console.log("*************************>" ,this.DBdata.profile.avatar)

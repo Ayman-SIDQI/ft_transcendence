@@ -266,6 +266,36 @@ z-index: 1;
 	background: linear-gradient(to right, #4b9db6, #4b9db6);
 	box-shadow: #00dbff 0px 0px 10px;
 }
+
+.qrCode {
+	color: black;
+	background-color: rgb(239, 245, 246);
+	width: 500px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+.enableDiv {
+	/* margin-left: 20px; */
+	/* background-color: red; */
+}
+.imgandqrdiv {
+	background-color: rgb(246, 231, 231);
+	font-size: large;
+}
+.enable, .disable {
+	background-color: #282828;
+	color: white;
+	display: flex;
+	justify-content: end;
+	border-radius: 20px;
+	margin-right: 10px;
+	/* margin-top: 60px; */
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 5px;
+	width: 112px;
+}
 .r2 {
 	background-color: rgb(37, 34, 34);
 	margin: 5px;
@@ -335,6 +365,7 @@ label {
 .LBTN {
 	display: flex;
 	justify-content: end;
+	margin-bottom: 10px;
 	/* margin-top: 100px; */
 }
 .uploadImg {

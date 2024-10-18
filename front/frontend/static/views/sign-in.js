@@ -78,7 +78,7 @@ export default class extends AbstractView {
 								</button>
 							</div>
 							<br>
-							<button data-link type="submit" class="sign-in btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</button>
+							<a data-link href="index.html" type="submit" class="sign-in btn btnSI btn-info btn-gradient-signup btn-gradient-signupSI">Sign In</a>
 
 							<small><br><br><p class="pSI">Don't have an account? <br><a class="aSI" data-link href="register.html">Sign up</a></p></small>
 							</form>
@@ -86,11 +86,11 @@ export default class extends AbstractView {
 					</section>
 					
 					<div class="popup2FA">
-					<div class="popup2FA-body panel">
-						<h4 style="color: #F8F8F8;display:flex;">2 factor Authentication</h4>
-						<input type="text">
-						<button id="closeModal">confirm</button>
-					</div>
+						<div class="popup2FA-body panel">
+							<h4 style="color: #F8F8F8;display:flex;">2 factor Authentication</h4>
+							<input type="text">
+							<button id="closeModal">confirm</button>
+						</div>
 				</div>
 	</main>`;
     }
