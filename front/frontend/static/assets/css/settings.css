@@ -258,8 +258,8 @@ z-index: 1;
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-bottom: 5px;
-	background-color: #151515;
 	border: none;
+	background-color: #151515;
 	background: linear-gradient(to right, #358B9A, #0BC2DF);
 }
 .save:hover, .uplBTN:hover {

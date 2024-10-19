@@ -86,10 +86,10 @@ export default class extends AbstractView {
 					</section>
 					
 					<div class="popup2FA">
-						<div class="popup2FA-body panel">
-							<h4 style="color: #F8F8F8;display:flex;">2 factor Authentication</h4>
-							<input type="text">
-							<button id="closeModal">confirm</button>
+						<div class="popup2FA-body ">
+							<div style="display: flex;justify-content: center;width:224px;height:22px;font-size: 18px;font-weight: bold;color: #F8F8F8;margin-top:10px;margin-bottom:25px;">2 factor Authentication</div>
+							<input id="input-6digit" type="text" style="width:285px;height:36;margin-bottom:30px;">
+							<button class="confirmBtn"  id="closeModal">confirm</button>
 						</div>
 				</div>
 	</main>`;
