@@ -85,6 +85,7 @@ class RegisterView(APIView):
 from django.core.files.base import ContentFile
 
 class RegisterTwoFAView(APIView):
+	permission_classes = (permissions.AllowAny, )
 	def get(self, request, format=None):
 		data = self.request.data
 		username = data['username']

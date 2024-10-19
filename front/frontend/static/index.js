@@ -457,7 +457,7 @@ class App {
 		this.profilepictoDB = null;
 		this.savedPic = null;
 		this.DBdata = null;
-		this._2fa = true;
+		this._2fa = false;
 		this._2faUsedSuccessfuly = false;
 
 		this.routes = [
@@ -598,13 +598,18 @@ class App {
 		}
 	}
 
-	enable2FA(e) // if its enable add a variable in backend to check if its enabled
+	async enable2FA(e) // if its enable add a variable in backend to check if its enabled
 	{
 		//check if its enable from backend to show disable
 		const en = e.target.closest(".enableDiv");
 		en.querySelector(".enable").innerHTML = "disable"
 		en.querySelector(".enable").classList = "disable"
 		this._2fa = true;
+		const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, 'GET', null, this.access)
+		if (data)
+		{
+			console.log("--->>>>>>>" ,data.qrimage)
+		}
 		// make a popup of qrcode
 	}
 	disable2FA(e)
