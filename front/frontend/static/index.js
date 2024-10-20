@@ -451,7 +451,7 @@ class App {
 		this.data = {};
 		this.access = null;
 		this.apiBaseUrl = "http://localhost:8000";
-		this.userSigned = false; // Track the user's sign-in status
+		this.userSigned = true; // Track the user's sign-in status
 		this.globalUserName = ''; // Track the logged-in user's name
 		this.profilepic = null;
 		this.profilepictoDB = null;
@@ -565,13 +565,19 @@ class App {
 	}
 
 	handleBodyClick(e) {
-		if (e.target.classList.contains('popup2FA'))
-			this.closeModal();
-		if (e.target.matches("#closeModal"))
-			this.closeModal();
-
-		
-		if (e.target.matches("#play")) {
+		if (e.target.matches(".confirmBtn")) {
+			this.confirm2FA(e);
+		} else if (e.target.matches(".enable")) {
+			e.preventDefault();
+			this.enable2FA(e);
+		} else if (e.target.matches(".disable")) {
+			e.preventDefault();
+			this.disable2FA(e);
+		} else if (e.target.classList.contains("popupQR") || e.target.classList.contains("closeModalQR")) {
+			this.closeModalQR(e);
+		} else if (e.target.classList.contains("popup2FA") || e.target.classList.contains("closeModal2FA")) {
+			this.closeModal("popup2FA");
+		} else if (e.target.matches("#play")) {
 			e.preventDefault();
 			this.startGame(e);
 		} else if (e.target.matches(".registerBtn")) {
@@ -598,27 +604,82 @@ class App {
 		}
 	}
 
+	openPopup(e, popupName)
+	{
+		const mainDiv = e.target.closest("main");
+		const popup = mainDiv.querySelector(`.${popupName}`);
+		if (!popup.classList.contains('open'))
+			popup.classList.add('open');
+		if (!mainDiv.classList.contains(`${popupName}-open`))
+			mainDiv.classList.add(`${popupName}-open`);
+	}
+
 	async enable2FA(e) // if its enable add a variable in backend to check if its enabled
 	{
-		//check if its enable from backend to show disable
-		const en = e.target.closest(".enableDiv");
-		en.querySelector(".enable").innerHTML = "disable"
-		en.querySelector(".enable").classList = "disable"
-		this._2fa = true;
-		const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, 'GET', null, this.access)
-		if (data)
-		{
-			console.log("--->>>>>>>" ,data.qrimage)
+		const confirmFunc = () => {
+			const inputVal = document.querySelector("#input-6digit").value;
+			if (inputVal) {
+				this._2fa = true;
+				const enableBtn = e.target.closest(".enableDiv").querySelector(".enable");
+				enableBtn.innerHTML = "disable";
+				enableBtn.classList.replace("enable", "disable");
+			}
+		};
+		
+		// Attach confirm action
+		const confirmBtn = document.querySelector(".confirmBtn");
+		confirmBtn.removeEventListener("click", confirmFunc);
+		confirmBtn.addEventListener("click", confirmFunc);
+		
+		try {
+			// const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, 'GET', null, this.access)
+			// if (data)
+			// 	{
+			// 		console.log("--->>>>>>>" ,data.qrimage)
+			// 	}
+				this.openPopup(e, "popupQR");
 		}
+		catch (err)
+		{
+			console.log(err);
+		}
+
 		// make a popup of qrcode
 	}
+
 	disable2FA(e)
 	{
-		const dis = e.target.closest(".enableDiv")
-		dis.querySelector(".disable").innerHTML = "enable"
-		dis.querySelector(".disable").classList = "enable"
+		const disableBtn = e.target.closest(".enableDiv").querySelector(".disable");
+		disableBtn.innerHTML = "enable";
+		disableBtn.classList = "enable";
 		this._2fa = false;
+	}
 
+	closeModalQR(e) {
+		const inputValue = document.querySelector("#input-6digit").value;
+		if (!inputValue) {
+			console.log("Input is empty, keeping the button as 'enable'.");
+		} else {
+			console.log("Input not empty, button changed.");
+		}
+		this.closeModal("popupQR");
+	}
+
+	closeModal(popName) {
+		document.querySelector(`.${popName}.open`).classList.remove('open');
+		document.body.classList.remove(`${popName}-open`);
+	}
+
+	confirm2FA(e) {
+		const inputVal = document.querySelector("#input-6digit").value.trim();
+		if (!inputVal) {
+			alert("fill the blank")
+			console.log("Input is empty, confirmation blocked.");
+			return;
+		}
+		// send inputValue to backend to check if its true or false
+			this._2fa = true;
+		this.closeModal("popupQR");
 	}
 
 	startGame(e) {
@@ -648,11 +709,7 @@ class App {
 		}
 	}
 	
-	closeModal() {
-		document.querySelector('.popup2FA.open').classList.remove('open');
-		document.body.classList.remove('popup2FA-open');
-	}
-
+	
 	async getDBdataAndNavigToPage(e, responseData)
 	{
 		console.log("access data")
@@ -691,13 +748,9 @@ class App {
 			{
 				// this._2faFunc(e); //use this later
 				const mainDiv = e.target.closest("main");
-				const popup2FA = mainDiv.querySelector(".popup2FA");
-				if (!popup2FA.classList.contains('open'))
-					popup2FA.classList.add('open');
-				if (!mainDiv.classList.contains('popup2FA-open'))
-					mainDiv.classList.add('popup2FA-open');
+				this.openPopup(e, "popup2FA")
 				const confirmBtn = mainDiv.querySelector(".confirmBtn");
-				
+
 				const confirmFunc = () => {
 					const digitValue = mainDiv.querySelector("#input-6digit").value;
 					console.log("here",digitValue)

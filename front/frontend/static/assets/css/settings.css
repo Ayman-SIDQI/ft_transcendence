@@ -281,7 +281,7 @@ z-index: 1;
 }
 .imgandqrdiv {
 	background-color: rgb(246, 231, 231);
-	font-size: large;
+	font-size: 20px;
 }
 .enable, .disable {
 	background-color: #282828;
@@ -372,4 +372,66 @@ label {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 50px;
+}
+
+.popupQR {
+    /* modals are hidden by default */
+    visibility: hidden;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+    /* modal container fixed across whole screen */
+    position: fixed;
+    inset: 0;
+
+    /* z-index must be higher than everything else on the page */
+    z-index: 10000;
+    
+    /* semi-transparent black background exposed by padding */
+    background-color: rgba(75, 69, 69, 0.75);
+    padding: 40px;
+
+    /* enables scrolling for tall modals */
+    overflow: auto;
+}
+
+.popupQR.open {
+    visibility: visible;
+}
+
+.popupQR-body {
+	display: flex;
+	/* justify-content: center; */
+	box-shadow: #737373 0px 0px 30px;
+	border-radius: 10px;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+    /* padding: 20px; */
+    background: #151515;
+	width: 444px;
+	height: 539px;
+
+}
+
+body.popupQR-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}
+
+#cadreQR {
+	justify-content: center;
+	display: flex;
+	background-color: white;
+	width: 336px;
+	height: 322px;
+	border-radius: 10px;
+}
+
+#imgQR {
+	margin: 10px;
+	width: 296px;
+	height: 296px;
 }
