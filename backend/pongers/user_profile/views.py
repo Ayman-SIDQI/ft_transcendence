@@ -13,6 +13,7 @@ from django.contrib.auth import update_session_auth_hash
 
 
 class UserProfileView(APIView):
+    permission_classes = (permissions.AllowAny, )
     def get(self, request, format=None):
         user = request.user
         username = user.username

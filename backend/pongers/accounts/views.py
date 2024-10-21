@@ -139,7 +139,7 @@ class twofaView(APIView):
 	
 	def post(self, request):
 		try:
-			print ("am here")
+			print ("am here***********************************")
 			username = request.data.get('username')
 			otp = request.data.get('otp')
 			user = UserProfile.objects.get(username=username)
@@ -154,7 +154,7 @@ class twofaView(APIView):
 					'access': str(refresh.access_token)
 				}, status=status.HTTP_200_OK)
 			else:
-				return Response({'error': 'Invalid OTP'}, status=status.HTTP_401_UNAUTHORIZED)
+				return Response({'error': 'Invalid OTPiiiii'}, status=status.HTTP_401_UNAUTHORIZED)
 		except UserProfile.DoesNotExist:
 			return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception:
