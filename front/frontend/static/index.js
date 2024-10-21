@@ -529,7 +529,6 @@ class App {
 		if (urlPath !== "/threeDimensionGame.html") {
 			this.stopGameMusic();
 		}
-		console.log("inside router : ",this.profilepic)
 	}
 
 	async updateView(view) {
@@ -564,9 +563,59 @@ class App {
 		delete window.game;
 	}
 
+	async confirm2FASignin(e)
+	{
+		const inputVal = document.querySelector("#input-6digit").value.trim();
+		if (!inputVal) {
+			alert("fill the blank")
+			console.log("Input is empty, confirmation blocked.");
+			return;
+		}
+		try
+		{
+			const sendDigit = {
+				username: this.globalUserName,
+				otp: inputVal
+			}
+			const data = await this.sendRequest(`${this.apiBaseUrl}/twofa/`, "POST", sendDigit, {
+				Authorization: `Bearer ${this.access}`
+			});
+
+			if (data)
+			{
+				if (data.access)
+				{
+					console.log("hahaha is good")
+					const maind = e.target.closest("main") // go back to main befor closing popup because e.target is only in qrpopup html not in main
+					this.closeModal("popup2FA");
+					// localStorage.removeItem('token')
+					// localStorage.removeItem('refresh')
+					// localStorage.setItem('token', data.access)
+					// localStorage.setItem('refresh', data.refresh)
+					this._2fa = true;
+				}
+				else
+				{
+					console.log("2fa failed")
+					window.alert("wrong number 1")
+					return;
+				}
+			}
+			else
+				console.log("response 2fa",data.error)
+		}
+		catch (err)
+		{
+			console.log(err);
+			return
+		}
+	}
+
 	handleBodyClick(e) {
 		if (e.target.matches(".confirmBtn")) {
 			this.confirm2FA(e);
+		} else if (e.target.matches(".confirmBtnSignin")) {
+			this.confirm2FASignin(e);
 		} else if (e.target.matches(".enable")) {
 			e.preventDefault();
 			this.enable2FA(e);
@@ -610,50 +659,7 @@ class App {
 
 	async enable2FA(e) // if its enable add a variable in backend to check if its enabled
 	{
-		const confirmFunc = async () => {
-			const inputVal = document.querySelector("#input-6digit").value;
-			if (inputVal) {
-				try
-				{
-					// const send = {
-					// 	username: "a",
-
-					// }
-					const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, "POST", inputVal, {
-						Authorization: `Bearer ${this.access}`
-					});
-
-					if (data)
-					{
-						if (data.twofa === 'Succesfully enabled')
-						{
-							console.log("good")
-							this._2fa = true;
-							const enableBtn = e.target.closest(".enableDiv").querySelector(".enable");
-							if (enableBtn)
-							{
-								enableBtn.innerHTML = "disable";
-								enableBtn.classList.replace("enable", "disable");
-							}
-						}
-					}
-					else
-						console.log("response 2fa",data.twofa)
-				}
-				catch (err)
-				{
-					console.log(err);
-				}
-
-
-			}
-		};
-		
-		// Attach confirm action
-		const confirmBtn = document.querySelector(".confirmBtn");
-		confirmBtn.removeEventListener("click", confirmFunc);
-		confirmBtn.addEventListener("click", confirmFunc);
-		
+		document.querySelector("#input-6digit").value = '';
 		try
 		{
 			// const response = await this.sendRequest(`${this.apiBaseUrl}//`,,,)
@@ -713,16 +719,59 @@ class App {
 		document.body.classList.remove(`${popName}-open`);
 	}
 
-	confirm2FA(e) {
+	async confirm2FA(e) {
 		const inputVal = document.querySelector("#input-6digit").value.trim();
 		if (!inputVal) {
 			alert("fill the blank")
 			console.log("Input is empty, confirmation blocked.");
 			return;
 		}
+		try
+		{
+			const sendDigit = {
+				username: this.globalUserName,
+				otp: inputVal
+			}
+			const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, "POST", sendDigit, {
+				Authorization: `Bearer ${this.access}`
+			});
+
+			if (data)
+			{
+				if (data.twofa === 'Succesfully enabled')
+				{
+					console.log("2fa is good")
+					const maind = e.target.closest("main") // go back to main befor closing popup because e.target is only in qrpopup html not in main
+					this.closeModal("popupQR");
+					const enableBtn = maind.querySelector(".enableDiv")
+					if (enableBtn)
+					{
+
+						const en = enableBtn.querySelector(".enable");
+						en.innerHTML = "disable";
+						en.classList.replace("enable", "disable");
+					}
+					this._2fa = true;
+				}
+				else
+				{
+					console.log("2fa failed")
+					window.alert("wrong number 1")
+					return;
+				}
+			}
+			else
+				console.log("response 2fa",data.twofa)
+		}
+		catch (err)
+		{
+			console.log(err);
+			return
+		}
+
 		// send inputValue to backend to check if its true or false
-			this._2fa = true;
-		this.closeModal("popupQR");
+		// this._2fa = true;
+		// this.closeModal("popupQR");
 	}
 
 	startGame(e) {
@@ -757,7 +806,13 @@ class App {
 	{
 		console.log("access data")
 		// store it in local storage
-		this.access = responseData.access;
+		this.access = localStorage.getItem('token');
+		if (!this.access)
+		{
+			localStorage.setItem('token', responseData.access);
+			localStorage.setItem('refresh', responseData.refresh);
+		}
+		// localStorage.removeItem('token'); // to clear token if the 15min is passed
 
 		this.DBdata = await this.fetchUserProfile();
 
@@ -814,7 +869,7 @@ class App {
 				if (!this._2faUsedSuccessfuly)
 					return;
 			}
-			if (responseData.access) {
+			else if (localStorage.getItem('token')) {
 				this.getDBdataAndNavigToPage(e, responseData);
 			} else {
 				throw new Error("Login failed, token not received.");

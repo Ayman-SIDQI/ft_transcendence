@@ -152,7 +152,7 @@ body.popup2FA-open {
     overflow: hidden;
 }
 
-.confirmBtn {
+.confirmBtn, .confirmBtnSignin {
 	background: linear-gradient(to right, #358B9A, #0BC2DF);
 	cursor: pointer;
 	font-family: montserrat;
@@ -161,7 +161,7 @@ body.popup2FA-open {
 	border-radius: 20px;
 	width:137px;
 }
-.confirmBtn:hover {
+.confirmBtn:hover, .confirmBtnSignin:hover {
 	background: linear-gradient(to right, #4b9db6, #4b9db6);
 	box-shadow: #00dbff 0px 0px 10px;
 }
