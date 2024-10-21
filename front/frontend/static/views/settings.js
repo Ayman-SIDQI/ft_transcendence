@@ -385,7 +385,7 @@ export default class extends AbstractView {
 				<div style="display: flex;justify-content: center;width:224px;height:22px;font-size: 18px;font-weight: bold;color: #F8F8F8;margin-top:10px;margin-bottom:25px;">2 factor Authentication</div>
 				<div id="cadreQR">
 					<div id="imgQR">
-						<img  src="static/assets/images/qrcode.svg" alt="no qr" >
+						<img id="imgQRrecieved" src="" alt="no img" >
 					</div>
 				</div>
 				<input id="input-6digit" type="text" style="width:285px;height:36px;margin-bottom:30px;margin-top:30px;">

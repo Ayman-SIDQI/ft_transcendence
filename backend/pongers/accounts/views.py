@@ -36,12 +36,13 @@ class RegisterView(APIView):
 
 		if not all([username, email, password, confirm_password]):
 			return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
-		# comment this try catch for testing
+		# --------------------- comment this try catch for testing
 		# try: 
 		# 	validate_username(username)
 		# except ValidationError as e:
 		# 	return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
-
+		# --------------------- 
+		
 		if User.objects.filter(username=username).exists():
 			return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
 		
@@ -51,11 +52,12 @@ class RegisterView(APIView):
 		if password != confirm_password:
 			return Response({'error': 'Passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
 		
-		# comment this try catch for testing
+		# --------------------- comment this try catch for testing
 		# try:
 		# 	validate_password(password)
 		# except ValidationError as e:
 		# 	return Response({'error': str(e.messages[0])}, status=status.HTTP_400_BAD_REQUEST)
+		# --------------------- 
 
 		try:
 			user = User.objects.create_user(username=username, email=email, password=password)
@@ -87,12 +89,17 @@ from django.core.files.base import ContentFile
 class RegisterTwoFAView(APIView):
 	permission_classes = (permissions.AllowAny, )
 	def get(self, request, format=None):
-		data = self.request.data
-		username = data['username']
+		# data = self.request.data
+		# username = data['username']
+		# ----- added --------
+		username = request.query_params.get('username')
+		if not username:
+			return Response({'error': 'Username is required'}, status=400)
+		# -------------
 		user = UserProfile.objects.get(username=username)
 		user.twofa_secret = secret_twofa()
 		user.save()
-		print (user.twofa_secret)
+		print(user.twofa_secret)
 		qrImageTag = generate_qrcode(generate_uri(username, user.twofa_secret))
 		return  Response({
 				'qrimage': qrImageTag,

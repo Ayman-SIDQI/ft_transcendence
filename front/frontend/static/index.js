@@ -451,7 +451,7 @@ class App {
 		this.data = {};
 		this.access = null;
 		this.apiBaseUrl = "http://localhost:8000";
-		this.userSigned = true; // Track the user's sign-in status
+		this.userSigned = false; // Track the user's sign-in status
 		this.globalUserName = ''; // Track the logged-in user's name
 		this.profilepic = null;
 		this.profilepictoDB = null;
@@ -595,12 +595,6 @@ class App {
 		} else if (e.target.matches(".cancel")) {
 			e.preventDefault();
 			this.cancelChanges(e);
-		} else if (e.target.matches(".enable")) {
-			e.preventDefault();
-			this.enable2FA(e);
-		} else if (e.target.matches(".disable")) {
-			e.preventDefault();
-			this.disable2FA(e);
 		}
 	}
 
@@ -616,13 +610,42 @@ class App {
 
 	async enable2FA(e) // if its enable add a variable in backend to check if its enabled
 	{
-		const confirmFunc = () => {
+		const confirmFunc = async () => {
 			const inputVal = document.querySelector("#input-6digit").value;
 			if (inputVal) {
-				this._2fa = true;
-				const enableBtn = e.target.closest(".enableDiv").querySelector(".enable");
-				enableBtn.innerHTML = "disable";
-				enableBtn.classList.replace("enable", "disable");
+				try
+				{
+					// const send = {
+					// 	username: "a",
+
+					// }
+					const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, "POST", inputVal, {
+						Authorization: `Bearer ${this.access}`
+					});
+
+					if (data)
+					{
+						if (data.twofa === 'Succesfully enabled')
+						{
+							console.log("good")
+							this._2fa = true;
+							const enableBtn = e.target.closest(".enableDiv").querySelector(".enable");
+							if (enableBtn)
+							{
+								enableBtn.innerHTML = "disable";
+								enableBtn.classList.replace("enable", "disable");
+							}
+						}
+					}
+					else
+						console.log("response 2fa",data.twofa)
+				}
+				catch (err)
+				{
+					console.log(err);
+				}
+
+
 			}
 		};
 		
@@ -631,18 +654,38 @@ class App {
 		confirmBtn.removeEventListener("click", confirmFunc);
 		confirmBtn.addEventListener("click", confirmFunc);
 		
-		try {
-			// const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/`, 'GET', null, this.access)
-			// if (data)
-			// 	{
-			// 		console.log("--->>>>>>>" ,data.qrimage)
-			// 	}
+		try
+		{
+			// const response = await this.sendRequest(`${this.apiBaseUrl}//`,,,)
+			const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/?username=a`, 'GET', null, {
+				Authorization: `Bearer ${this.access}`
+			});
+			if (data)
+			{
+				// console.log("--->>>>>>>" ,data.qrimage)
 				this.openPopup(e, "popupQR");
+
+				// show the qr code in the img
+				const maindv = e.target.closest("main");
+				if (maindv)
+				{
+					const imgQR = maindv.querySelector("#imgQRrecieved");
+					if (imgQR)
+					{
+						if (data.qrimage.startsWith("data:image"))
+							imgQR.src = data.qrimage;  // This is already in the correct format
+						else
+							imgQR.src = `data:image/png;base64,${data.qrimage}`;
+						// console.log("here--------------",imgQR.src)
+					}
+				}
+			}
 		}
 		catch (err)
 		{
 			console.log(err);
 		}
+		
 
 		// make a popup of qrcode
 	}
@@ -713,6 +756,7 @@ class App {
 	async getDBdataAndNavigToPage(e, responseData)
 	{
 		console.log("access data")
+		// store it in local storage
 		this.access = responseData.access;
 
 		this.DBdata = await this.fetchUserProfile();
@@ -935,7 +979,7 @@ class App {
 		}
 		catch (err)
 		{
-			console.log("error in req")
+			console.log("error in req xd", err)
 			throw err;
 		}
 	}

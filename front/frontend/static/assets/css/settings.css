@@ -430,7 +430,7 @@ body.popupQR-open {
 	border-radius: 10px;
 }
 
-#imgQR {
+ #imgQRrecieved {
 	margin: 10px;
 	width: 296px;
 	height: 296px;
