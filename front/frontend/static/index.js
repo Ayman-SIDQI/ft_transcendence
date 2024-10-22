@@ -145,9 +145,10 @@ class App {
 		}
 		try
 		{
+
 			const sendDigit = {
-				username: 'a', // zak this is empty need to check how to solv it
-				// username: this.globalUserName, // zak this is empty need to check how to solv it
+				// username: 'z', // zak this is empty need to check how to solv it
+				username: this.globalUserName, // zak this is empty need to check how to solv it
 				otp: inputVal
 			}
 			console.log("confirm in sign in clicked ################", sendDigit.username)
@@ -238,7 +239,8 @@ class App {
 		try
 		{
 			// const response = await this.sendRequest(`${this.apiBaseUrl}//`,,,)
-			const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/?username=a`, 'GET', null, {
+			console.log("****************^^^^^ send usernamea= ", this.globalUserName)
+			const data = await this.sendRequest(`${this.apiBaseUrl}/twofa-setup/?username=${encodeURIComponent(this.globalUserName)}`, 'GET', null, {
 				Authorization: `Bearer ${this.access}`
 			});
 			if (data)
@@ -382,6 +384,7 @@ class App {
 		console.log("access data", responseData)
 		// store it in local storage
 		console.log("this:", this);
+		// this.globalUserName = responseData.username;
 		this.access = localStorage.getItem('token');
 		console.log("this.access:", this.access);
 		if (!this.access)
@@ -392,9 +395,10 @@ class App {
 		}
 		// localStorage.removeItem('token'); // to clear token if the 15min is passed
 		// this.access = responseData.access
-		this.DBdata = await this.fetchUserProfile();
+		console.log("befor data", responseData.username)
+		this.DBdata = await this.fetchUserProfile(responseData);
 		this.globalUserName = responseData.username;
-		console.log("access data", responseData.username, responseData)
+		console.log("after data", this.DBdata.profile.username)
 		// this.globalUserName = this.DBdata.profile.username; // zak this is data base not response
 		this.userSigned = true;
 		this.handleNavigation(e);
@@ -422,7 +426,7 @@ class App {
 		try {
 			const responseData = await this.sendRequest(`${this.apiBaseUrl}/login/`, "POST", this.data);
 			console.log("here *************",responseData) // zak check if database send profile data that greyone send in discord
-
+			this.globalUserName = responseData.username;
 			if (responseData.message === '2FA OTP required') // test if 2fa is enable
 			{
 				console.log("entered *************")
@@ -463,8 +467,9 @@ class App {
 		}
 	}
 
-	fetchUserProfile() {
-		return this.sendRequest(`${this.apiBaseUrl}/user/`, "GET", null, {
+	fetchUserProfile(responseData) {
+		console.log("&&&&&&&&&&&&&& " , responseData.username)
+		return this.sendRequest(`${this.apiBaseUrl}/user/?username=${encodeURIComponent(responseData.username)}`, "GET", null, {
 			Authorization: `Bearer ${this.access}`
 		});
 	}
