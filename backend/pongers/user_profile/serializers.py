@@ -6,4 +6,5 @@ from accounts.models import UserProfile
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['user', 'username', 'email', 'country', 'date_of_birth', 'avatar', 'login_status']
+        fields = ['user', 'username', 'email', 'country', 'avatar_url', 'date_of_birth', 'avatar', 'login_status']
+        # fields = ['user', 'username', 'email', 'country', 'date_of_birth', 'avatar', 'login_status']

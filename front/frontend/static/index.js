@@ -427,6 +427,7 @@ class App {
 			const responseData = await this.sendRequest(`${this.apiBaseUrl}/login/`, "POST", this.data);
 			console.log("here *************",responseData) // zak check if database send profile data that greyone send in discord
 			this.globalUserName = responseData.username;
+			
 			if (responseData.message === '2FA OTP required') // test if 2fa is enable
 			{
 				console.log("entered *************")
@@ -468,7 +469,6 @@ class App {
 	}
 
 	fetchUserProfile(responseData) {
-		console.log("&&&&&&&&&&&&&& " , responseData.username)
 		return this.sendRequest(`${this.apiBaseUrl}/user/?username=${encodeURIComponent(responseData.username)}`, "GET", null, {
 			Authorization: `Bearer ${this.access}`
 		});
@@ -485,6 +485,7 @@ class App {
 			this.profilepic = null;
 		}
 		const href = e.target.href;
+		console.log(">>>>>>---->>>",href)
 		if (!href) return;
 
 		this.navigateTo(href);
