@@ -103,3 +103,65 @@ footer{
 	align-items: end;
 	justify-content: start;
 }
+
+
+.popup2FA {
+    /* modals are hidden by default */
+    visibility: hidden;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+    /* modal container fixed across whole screen */
+    position: fixed;
+    inset: 0;
+
+    /* z-index must be higher than everything else on the page */
+    z-index: 10000;
+    
+    /* semi-transparent black background exposed by padding */
+    background-color: rgba(75, 69, 69, 0.75);
+    padding: 40px;
+
+    /* enables scrolling for tall modals */
+    overflow: auto;
+}
+
+.popup2FA.open {
+    visibility: visible;
+}
+
+.popup2FA-body {
+	display: flex;
+	/* justify-content: center; */
+	box-shadow: #737373 0px 0px 30px;
+	border-radius: 10px;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+    /* padding: 20px; */
+    background: #151515;
+	width: 414px;
+	height: 222px;
+
+}
+
+body.popup2FA-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}
+
+.confirmBtn, .confirmBtnSignin {
+	background: linear-gradient(to right, #358B9A, #0BC2DF);
+	cursor: pointer;
+	font-family: montserrat;
+	border: none;
+	color: white;
+	border-radius: 20px;
+	width:137px;
+}
+.confirmBtn:hover, .confirmBtnSignin:hover {
+	background: linear-gradient(to right, #4b9db6, #4b9db6);
+	box-shadow: #00dbff 0px 0px 10px;
+}

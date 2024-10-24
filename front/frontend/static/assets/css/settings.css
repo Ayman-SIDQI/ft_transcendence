@@ -258,13 +258,43 @@ z-index: 1;
 	padding-left: 30px;
 	padding-right: 30px;
 	padding-bottom: 5px;
-	background-color: #151515;
 	border: none;
+	background-color: #151515;
 	background: linear-gradient(to right, #358B9A, #0BC2DF);
 }
 .save:hover, .uplBTN:hover {
 	background: linear-gradient(to right, #4b9db6, #4b9db6);
 	box-shadow: #00dbff 0px 0px 10px;
+}
+
+.qrCode {
+	color: black;
+	background-color: rgb(239, 245, 246);
+	width: 500px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+.enableDiv {
+	/* margin-left: 20px; */
+	/* background-color: red; */
+}
+.imgandqrdiv {
+	background-color: rgb(246, 231, 231);
+	font-size: 20px;
+}
+.enable, .disable {
+	background-color: #282828;
+	color: white;
+	display: flex;
+	justify-content: end;
+	border-radius: 20px;
+	margin-right: 10px;
+	/* margin-top: 60px; */
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 5px;
+	width: 112px;
 }
 .r2 {
 	background-color: rgb(37, 34, 34);
@@ -335,10 +365,73 @@ label {
 .LBTN {
 	display: flex;
 	justify-content: end;
+	margin-bottom: 10px;
 	/* margin-top: 100px; */
 }
 .uploadImg {
 	display: flex;
 	justify-content: center;
 	margin-bottom: 50px;
+}
+
+.popupQR {
+    /* modals are hidden by default */
+    visibility: hidden;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+    /* modal container fixed across whole screen */
+    position: fixed;
+    inset: 0;
+
+    /* z-index must be higher than everything else on the page */
+    z-index: 10000;
+    
+    /* semi-transparent black background exposed by padding */
+    background-color: rgba(75, 69, 69, 0.75);
+    padding: 40px;
+
+    /* enables scrolling for tall modals */
+    overflow: auto;
+}
+
+.popupQR.open {
+    visibility: visible;
+}
+
+.popupQR-body {
+	display: flex;
+	/* justify-content: center; */
+	box-shadow: #737373 0px 0px 30px;
+	border-radius: 10px;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+    /* padding: 20px; */
+    background: #151515;
+	width: 444px;
+	height: 539px;
+
+}
+
+body.popupQR-open {
+    /* body overflow is hidden to hide main scrollbar when modal window is open */
+    overflow: hidden;
+}
+
+#cadreQR {
+	justify-content: center;
+	display: flex;
+	background-color: white;
+	width: 336px;
+	height: 322px;
+	border-radius: 10px;
+}
+
+ #imgQRrecieved {
+	margin: 10px;
+	width: 296px;
+	height: 296px;
 }

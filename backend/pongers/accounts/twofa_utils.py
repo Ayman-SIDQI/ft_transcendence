@@ -30,6 +30,12 @@ def generate_qrcode(data):
 	return base64_string
 
 def verify_token(secret, token):
+	# zak how to check this
+	print('---------------')
+	print(secret)
+	print('---------------')
+	print(token)
+	print('---------------')
 	return pyotp.TOTP(secret).verify(token)
 
 # print( generate_qrcode( generate_uri("hafida", secret_twofa())))
