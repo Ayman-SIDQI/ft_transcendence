@@ -37,6 +37,7 @@ CORS_ALLOW_ALL_ORIGINS = True # hakim remove this after
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'multiplayer',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +83,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pongers.wsgi.application'
+ASGI_APPLICATION = 'pongers.asgi.application'
 
+CHANNEL_LAYERS = {
+	'default': {
+		'BACKEND': 'channels_redis.core.RedisChannelLayer',
+		'CONFIG': {
+			"hosts": [('127.0.0.1', 6379)]
+        }
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -165,3 +176,17 @@ REST_FRAMEWORK = {
 
 CSRF_USE_SESSIONS = False
 CSRF_COOKIE_HTTPONLY = False
+
+# LOGGING= {
+# 	'version': 1,
+# 	'disable_existing_loggers': False,
+# 	'handlers': {
+# 		'console': {
+# 			'class': 'logging.StreamHandler',
+#         },
+#     },
+# 	'root': {
+# 		'handlers': ['console'],
+# 		'level': 'INFO',
+#     },
+# }

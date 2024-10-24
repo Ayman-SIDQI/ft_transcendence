@@ -18,9 +18,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'https://unpkg.com/three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three/examples/jsm/loaders/GLTFLoader.js';
 import { FontLoader } from 'https://unpkg.com/three/examples/jsm/loaders/FontLoader.js';
-// import { RGBELoader } from 'https://unpkg.com/three/examples/jsm/geometries/RGBELoader.js';
 
-import { RGBELoader } from 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@r152/examples/jsm/loaders/RGBELoader.js';
+import { TextGeometry } from 'https://unpkg.com/three/examples/jsm/geometries/TextGeometry.js';
+import { RGBELoader } from 'https://cdn.jsdelivr.net/gh/mrdoob/three.js/examples/jsm/loaders/RGBELoader.js';
 
 
 
@@ -39,14 +39,71 @@ export class threeDimensionGame {
 	PathAI = false;
 	once = true;
 
-
 	constructor() {
+		// const roomName = 'default';
+		this.url = `ws://${window.location.host}/ws/game/matchmaking/`;
+		// this.url = `ws://${window.location.host}/ws/game/${roomName}/`;
+		this.remoteSocket = new WebSocket(this.url);
+
+		this.remoteSocket.onopen = function () {
+			console.log('WebSocket connection established');
+		};
+		this.remoteSocket.onmessage = function (e) {
+			const data = JSON.parse(e.data);
+			console('Data: ', data);
+
+			// switch (data.type) {
+			// 	case 'connection_established':
+			// 		console.log('Connected with ID:', data.player_id);
+			// 		// Start matchmaking when connected
+			// 		findMatch();
+			// 		break;
+
+			// 	case 'matchmaking_status':
+			// 		console.log('Matchmaking status:', data.status);
+			// 		// Update UI to show waiting status
+			// 		break;
+
+			// 	case 'match_found':
+			// 		console.log('Match found! Game ID:', data.game_id);
+			// 		// Initialize game with opponent
+			// 		initGame(data.player1, data.player2);
+			// 		// Send ready status
+			// 		gameSocket.send(JSON.stringify({ type: 'player_ready' }));
+			// 		break;
+
+			// 	case 'game_start':
+			// 		console.log('Both players ready, starting game!');
+			// 		startGame();
+			// 		break;
+
+			// 	case 'game_update':
+			// 		// Update game state based on opponent's data
+			// 		handleGameUpdate(data.game_state);
+			// 		break;
+
+			// 	case 'player_disconnected':
+			// 		handlePlayerDisconnect(data.player_id);
+			// 		break;
+			// }
+			// this.remoteSocket.onclose = function (event) {
+			// 	console.log('WebSocket connection closed');
+			// };
+			// function findMatch() {
+			// 	gameSocket.send(JSON.stringify({ type: 'find_match' }));
+			// }
+
+			// function sendGameUpdate(gameState) {
+			// 	gameSocket.send(JSON.stringify({
+			// 		type: 'game_update',
+			// 		game_state: gameState
+			// 	}));
+			// }
+		}
+
 		this.Score1 = 0;
 		this.Score2 = 0;
-		// console.log("HAHAH", this.Score1, this.Score2);
 		this.stringScore = String(this.Score1).padStart(2, '0') + " " + String(this.Score2).padStart(2, '0');
-		// console.log("MAMAM", this.stringScore);
-		// this.animate = this.animate.bind(this);
 		this.gameObjects = {
 
 			paddle1: null,
@@ -87,7 +144,7 @@ export class threeDimensionGame {
 
 		const hdrTextureURL = 'static/assets/background/';
 		new RGBELoader().setPath(hdrTextureURL).load(
-			'winter_evening_16k.hdr',
+			'winter_evening_8k.hdr',
 			texture => {
 				texture.mapping = THREE.EquirectangularReflectionMapping;
 				this.scene.background = texture;
@@ -155,7 +212,22 @@ export class threeDimensionGame {
 				};
 
 
-
+				// const objectNames =
+				// {
+				// 	paddle1: 'Object_12',
+				// 	paddle2: 'Object_14',
+				// 	ball: 'Object_16',
+				// 	ballAI: 'AI_ball',
+				// 	wallAI: 'AI_target',
+				// 	wall1: 'Object_12001',
+				// 	wall2: 'Object_12002',
+				// 	goal1: 'Goal1',
+				// 	goal2: 'Goal2',
+				// 	coin: 'Object_20',
+				// };
+				// for (const [key, name] of Object.entries(objectNames)) {
+				// 	this.gameObjects[key] = findObject(gltf, name);
+				// }
 				this.gameObjects.paddle1 = findObject(gltf, 'Object_12');
 				this.gameObjects.paddle2 = findObject(gltf, 'Object_14');
 				this.gameObjects.ball = findObject(gltf, 'Object_16');
@@ -220,30 +292,30 @@ export class threeDimensionGame {
 
 				this.gameObjects.boundingGoal2 = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
 				this.gameObjects.boundingGoal2.setFromObject(this.gameObjects.goal2);
-				// console.log('Bounding paddle2:', this.gameObjects.boundingGoal2);
+				// // console.log('Bounding paddle2:', this.gameObjects.boundingGoal2);
 
-				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+				// //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-				// box helper for bounding box
+				// // box helper for bounding box
 
-				const AIwallHelper = new THREE.Box3Helper(this.gameObjects.boundingWallAI, 0xffff00);
-				this.scene.add(AIwallHelper);
-				const AIboxHelper = new THREE.Box3Helper(this.gameObjects.boundingBoxAI, 0xffff00);
-				this.scene.add(AIboxHelper);
-				const boxHelper = new THREE.Box3Helper(this.gameObjects.boundingBox, 0xffff00);
-				this.scene.add(boxHelper);
-				const wallHelper = new THREE.Box3Helper(this.gameObjects.boundingWall, 0xffff00);
-				this.scene.add(wallHelper);
-				const wallTwoHelper = new THREE.Box3Helper(this.gameObjects.boundingWallTwo, 0xffff00);
-				this.scene.add(wallTwoHelper);
-				const paddle1Helper = new THREE.Box3Helper(this.gameObjects.boundingPaddle1, 0xffff00);
-				this.scene.add(paddle1Helper);
-				const paddle2Helper = new THREE.Box3Helper(this.gameObjects.boundingPaddle2, 0xffff00);
-				this.scene.add(paddle2Helper);
-				const Goal1Helper = new THREE.Box3Helper(this.gameObjects.boundingGoal1, 0xffff00);
-				this.scene.add(Goal1Helper);
-				const Goal2Helper = new THREE.Box3Helper(this.gameObjects.boundingGoal2, 0xffff00);
-				this.scene.add(Goal2Helper);
+				// const AIwallHelper = new THREE.Box3Helper(this.gameObjects.boundingWallAI, 0xffff00);
+				// this.scene.add(AIwallHelper);
+				// const AIboxHelper = new THREE.Box3Helper(this.gameObjects.boundingBoxAI, 0xffff00);
+				// this.scene.add(AIboxHelper);
+				// const boxHelper = new THREE.Box3Helper(this.gameObjects.boundingBox, 0xffff00);
+				// this.scene.add(boxHelper);
+				// const wallHelper = new THREE.Box3Helper(this.gameObjects.boundingWall, 0xffff00);
+				// this.scene.add(wallHelper);
+				// const wallTwoHelper = new THREE.Box3Helper(this.gameObjects.boundingWallTwo, 0xffff00);
+				// this.scene.add(wallTwoHelper);
+				// const paddle1Helper = new THREE.Box3Helper(this.gameObjects.boundingPaddle1, 0xffff00);
+				// this.scene.add(paddle1Helper);
+				// const paddle2Helper = new THREE.Box3Helper(this.gameObjects.boundingPaddle2, 0xffff00);
+				// this.scene.add(paddle2Helper);
+				// const Goal1Helper = new THREE.Box3Helper(this.gameObjects.boundingGoal1, 0xffff00);
+				// this.scene.add(Goal1Helper);
+				// const Goal2Helper = new THREE.Box3Helper(this.gameObjects.boundingGoal2, 0xffff00);
+				// this.scene.add(Goal2Helper);
 				this.scene.add(gltf.scene);
 			},
 			(progress) => {
@@ -326,17 +398,10 @@ export class threeDimensionGame {
 	}
 
 	movePaddles() {
-
-		// Move paddle 1
 		if (DKeyState && !this.gameObjects.boundingPaddle1.intersectsBox(this.gameObjects.boundingWallTwo))
 			this.gameObjects.paddle1.position.z += 1;
 		if (AKeyState && !this.gameObjects.boundingPaddle1.intersectsBox(this.gameObjects.boundingWall))
 			this.gameObjects.paddle1.position.z -= 1;
-		// Move paddle 2
-		// if (ArrowLeftKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo))
-		// 	this.gameObjects.paddle2.position.z += 1;
-		// if (ArrowRightKeyState && !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall))
-		// 	this.gameObjects.paddle2.position.z -= 1;
 	}
 
 	onWindowResize() {
@@ -377,7 +442,14 @@ export class threeDimensionGame {
 	}
 
 
-
+	setBounders() {
+		this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
+		this.gameObjects.boundingWall.setFromObject(this.gameObjects.wall2);
+		this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
+		this.gameObjects.boundingPaddle1.setFromObject(this.gameObjects.paddle1);
+		this.gameObjects.boundingPaddle2.setFromObject(this.gameObjects.paddle2);
+		this.gameObjects.boundingBoxAI.setFromObject(this.gameObjects.ballAI);
+	}
 
 
 	ballPhysics(ball) {
@@ -511,17 +583,6 @@ export class threeDimensionGame {
 			this.gameObjects.paddle2.position.z -= 1;
 		}
 
-		// Additional AI movement logic, ensuring it respects the wall boundaries
-		// if (!ArrowLeftKeyState && !ArrowRightKeyState /* && this.gameObjects.boundingBoxAI.intersectsBox(this.gameObjects.boundingPaddle2) */) {
-		// 	const paddleSpeed = 1;
-		// 	if (this.gameObjects.paddle2.position.z < this.gameObjects.ballAI.position.z 
-		// 		&& !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWallTwo)) {
-		// 		this.gameObjects.paddle2.position.z += paddleSpeed; // Move paddle forward
-		// 	} else if (this.gameObjects.paddle2.position.z > this.gameObjects.ballAI.position.z 
-		// 		&& !this.gameObjects.boundingPaddle2.intersectsBox(this.gameObjects.boundingWall)) {
-		// 		this.gameObjects.paddle2.position.z -= paddleSpeed; // Move paddle backward
-		// 	}
-		// }
 		const deadZone = 6.1;
 		const distanceToBall = this.gameObjects.ballAI.position.z - this.gameObjects.paddle2.position.z;
 
@@ -535,39 +596,21 @@ export class threeDimensionGame {
 		}
 
 	}
-	// lastTime = 0;
 
 
 
 	animate(time) {
-		// const deltaTime = time - this.lastTime;
-		// this.lastTime = time;
-		// console.log("Frame Time:", deltaTime);
-
-
 		requestAnimationFrame(this.animate.bind(this));
 		if (window.location.pathname !== "/threeDimensionGame.html") {
 			this.backgroundMusic.stop();
 			gameStarted = false;
 		}
-		// else {
 		if (gameStarted && !gamePaused) {
 			this.gameObjects.coin.position.y = -0.2;
 			if (!this.backgroundMusic.isPlaying)
 				this.backgroundMusic.play();
-			this.gameObjects.boundingBox.setFromObject(this.gameObjects.ball);
-			this.gameObjects.boundingWall.setFromObject(this.gameObjects.wall2);
-			this.gameObjects.boundingWallTwo.setFromObject(this.gameObjects.wall1);
-			this.gameObjects.boundingPaddle1.setFromObject(this.gameObjects.paddle1);
-			this.gameObjects.boundingPaddle2.setFromObject(this.gameObjects.paddle2);
-			this.gameObjects.boundingBoxAI.setFromObject(this.gameObjects.ballAI);
-			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-			// move ball
+			this.setBounders();
 			this.ballPhysics(this.gameObjects.ball);
-			// const lerpFactor = 0.1; // Adjust this value between 0 and 1
-			// this.gameObjects.ballAI.position.lerp(this.gameObjects.ball.position, lerpFactor);
-			//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-			// move paddles
 			this.movePaddles();
 		}
 		else {
